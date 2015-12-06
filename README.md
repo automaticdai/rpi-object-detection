@@ -28,4 +28,4 @@ http://simplecv.readthedocs.org/en/latest/HOWTO-Install%20on%20RaspberryPi.html
 
 2. Run scripts in the '/src' folder
 
-[pic_camera_test]: https://github.com/automaticdai/pi-object-detection/doc/cv_camera_test.jpg
+[pic_camera_test]: https://github.com/automaticdai/pi-object-detection/blob/master/doc/cv_camera_test.jpg
