@@ -9,27 +9,28 @@ YunFei Robotics Labrotary
 htttp://www.yfworld.com
 
 <Version>
-V1.0, 2015 Dec 06
+V1.1, 2017 July 04
 
 """
 
-from SimpleCV import *
+import cv2
+import numpy as np
 
-# Initialize the camera
-cam = Camera()
-disp = Display()
+# create video capture
+cap = cv2.VideoCapture(0)
 
 # Loop to continuously get images
-while disp.isNotDone():
-	# Get Image from camera
-	img = cam.getImage()
+while(1):
+    # Read the frames frome a camera
+    _,frame = cap.read()
 
-	# Draw the text "Hello World" on image
-	img.drawText("YunFei Robotics Lab")
+	# show image
+	cv2.imshow('frame', frame)
 
-	# Show the image
-	img.show()
-
-	# quit if mouse clicked
-	if disp.mouseLeft:
-		break
+    # if key pressed is 'Esc' then exit the loop
+    if cv2.waitKey(33)== 27:
+        break
+    
+# Clean up and exit the program
+cv2.destroyAllWindows()
+cap.release()
