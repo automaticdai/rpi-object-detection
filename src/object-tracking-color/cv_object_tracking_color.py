@@ -15,34 +15,34 @@ Key Steps:
 <Author>
 Xiaotian Dai
 YunFei Robotics Labrotary
-htttp://www.yfworld.com
-</Author>
+http://www.xiaotiandai.com
+
 
 """
 
 import cv2
 import numpy as np
 
-def isset(v): 
-    try: 
-        type (eval(v)) 
-    except: 
-        return 0 
-    else: 
+def isset(v):
+    try:
+        type (eval(v))
+    except:
+        return 0
+    else:
         return 1
 
 # create video capture
 cap = cv2.VideoCapture(0)
 
 while(1):
-    
+
     # Read the frames frome a camera
     _,frame = cap.read()
     frame = cv2.blur(frame,(3,3))
 
     # Or get it from a JPEG
     #frame = cv2.imread('frame0010.jpg', 1)
-    
+
     # Convert the image to hsv space and find range of colors
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
@@ -65,7 +65,7 @@ while(1):
             max_area = area
             best_cnt = cnt
 
-    # finding centroids of best_cnt and draw a circle there     
+    # finding centroids of best_cnt and draw a circle there
     if isset('best_cnt'):
         M = cv2.moments(best_cnt)
         cx,cy = int(M['m10']/M['m00']), int(M['m01']/M['m00'])
@@ -73,15 +73,15 @@ while(1):
         print "Central pos: (%d, %d)" % (cx,cy)
     else:
         print "[Warning]Tag lost..."
-        
+
     # Show the original and processed image
     cv2.imshow('frame', frame)
     cv2.imshow('thresh', thresh2)
-    
+
     # if key pressed is 'Esc' then exit the loop
     if cv2.waitKey(33)== 27:
         break
-    
+
 # Clean up and exit the program
 cv2.destroyAllWindows()
 cap.release()

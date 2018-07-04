@@ -6,7 +6,7 @@ SimpleCV has been properly installed.
 <Author>
 Xiaotian Dai
 YunFei Robotics Labrotary
-htttp://www.yfworld.com
+http://www.xiaotiandai.com
 
 <Version>
 V1.1, 2017 July 04
@@ -24,13 +24,13 @@ while(1):
     # Read the frames frome a camera
     _,frame = cap.read()
 
-	# show image
-	cv2.imshow('frame', frame)
+    # show image
+    cv2.imshow('frame', frame)
 
     # if key pressed is 'Esc' then exit the loop
     if cv2.waitKey(33)== 27:
         break
-    
+
 # Clean up and exit the program
 cv2.destroyAllWindows()
 cap.release()
