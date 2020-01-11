@@ -1,12 +1,10 @@
 """
-<Description>
-
+Detect any motion in the frame.
 
 <Author>
 Xiaotian Dai
 YunFei Robotics Labrotary
 http://www.xiaotiandai.com/
-
 """
 
 import cv2
@@ -19,24 +17,24 @@ cnt_frame = 0
 cam = cv2.VideoCapture(0)
 
 
-def mse(imageA, imageB):
-	# the 'Mean Squared Error' between the two images is the
-	# sum of the squared difference between the two images;
-	# NOTE: the two images must have the same dimension
-	err = np.sum((imageA.astype("float") - imageB.astype("float")) ** 2)
-	err /= float(imageA.shape[0] * imageA.shape[1])
+def mse(image_a, image_b):
+    # the 'Mean Squared Error' between the two images is the
+    # sum of the squared difference between the two images;
+    # NOTE: the two images must have the same dimension
+    err = np.sum((image_a.astype("float") - image_b.astype("float")) ** 2)
+    err /= float(image_a.shape[0] * image_a.shape[1])
 
-	# return the MSE, the lower the error, the more "similar"
-	# the two images are
-	return err
+    # return the MSE, the lower the error, the more "similar"
+    # the two images are
+    return err
 
 
 try:
-    while(1):
+    while True:
         # record start time
         start = time.time()
 
-        # Read the frames frome a camera
+        # Read the frames from a camera
         _, frame = cam.read()
 
         # Convert to gray image
@@ -50,8 +48,8 @@ try:
         cv2.imshow('edge', edges)
 
         # Calculate MSE
-        if (cnt_frame > 0):
-            if (mse(frame_gray, frame_gray_p) > 100):
+        if cnt_frame > 0:
+            if mse(frame_gray, frame_gray_p) > 100:
                 print('Frame{0}: Motion Detected!'.format(cnt_frame))
 
         # if key pressed is 'Esc' then exit the loop
@@ -65,7 +63,6 @@ try:
         seconds = end - start
         fps = 1.0 / seconds
         # print("Estimated fps:{0:0.1f}".format(fps));
-
 
         cnt_frame = cnt_frame + 1
         edges_p = edges

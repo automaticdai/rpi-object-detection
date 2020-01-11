@@ -42,7 +42,9 @@ Track an object based on its color (green/blue) and print its center position.
 ## How to Run
 ### 1. Install the environment on Raspberry Pi
 ```
-$sudo apt-get install libopencv-dev python3-opencv
+sudo apt-get install libopencv-dev python3-opencv
+sudo apt-get install libatlas-base-dev
+pip3 install virtualenv Pillow numpy scipy pygame
 ```
 
 ### 2. Install TensorFlow Lite
