@@ -5,9 +5,9 @@ Use a Raspberry Pi and a USB web camera for computer vision with OpenCV and Tens
 
 ## Package Dependency
 This project is dependent on the following packages:
-- Python 3.5, 3.6, 3.7
+- Python > 3.5
 - OpenCV-Python
-- TensorFlow Lite
+
 
 
 ## Hardware Support
@@ -33,10 +33,10 @@ Track an object based on its color (green/blue) and print its center position.
 ![alt text](./doc/cv_object_tracking.jpg)
 
 ### 4. Object Tracking (feature-based)
-(unfinished) Track an object based on its feature. Sample images have to be provided.
+(ongoing) Track an object based on its feature. Sample images have to be provided.
 
 ### 5. Object Detection with TensorFlow
-(unfinished) Use TensorFlow Lite to recognise objects. 
+(ongoing) Use TensorFlow Lite to recognise objects. 
 
 
 ## How to Run
@@ -47,7 +47,7 @@ sudo apt-get install libatlas-base-dev
 pip3 install virtualenv Pillow numpy scipy pygame
 ```
 
-### 2. Install TensorFlow Lite
+### 2. Install TensorFlow Lite (can be skipped for now)
 ```
 wget https://github.com/PINTO0309/Tensorflow-bin/raw/master/tensorflow-2.1.0-cp37-cp37m-linux_armv7l.whl
 pip3 install --upgrade setuptools
