@@ -1,11 +1,11 @@
 """
 Display the image captured from the camera. Used as a test program to verify if OpenCV has been properly installed.
 
-Author: Xiaotian Dai
-Organization: YunFei Robotics Labrotary
-Website: http://www.xiaotiandai.com
-
-Version 1.1, 2017 July 04
+<Author>
+Xiaotian Dai
+YunFei Robotics Labrotary
+Website: http://www.yfrl.org
+</Author>
 """
 
 import cv2

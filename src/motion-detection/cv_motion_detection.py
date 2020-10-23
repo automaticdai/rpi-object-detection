@@ -4,7 +4,8 @@ Detect any motion in the frame.
 <Author>
 Xiaotian Dai
 YunFei Robotics Labrotary
-http://www.xiaotiandai.com/
+Website: http://www.yfrl.org
+</Author>
 """
 
 import cv2

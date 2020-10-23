@@ -14,7 +14,8 @@ Key Steps:
 <Author>
 Xiaotian Dai
 YunFei Robotics Labrotary
-http://www.xiaotiandai.com
+Website: http://www.yfrl.org
+</Author>
 """
 
 import cv2
@@ -46,10 +47,10 @@ while(1):
     # Convert the image to hsv space and find range of colors
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
-    # This is for RED tag
+    # Uncomment this for RED tag
     # thresh = cv2.inRange(hsv,np.array((120, 80, 80)), np.array((180, 255, 255)))
 
-    # This is for GREEN tag
+    # Uncomment this for GREEN tag
     thresh = cv2.inRange(hsv,np.array((50, 80, 80)), np.array((120, 255, 255)))
 
     thresh2 = thresh.copy()
