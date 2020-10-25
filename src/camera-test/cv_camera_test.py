@@ -10,21 +10,28 @@ Website: http://www.yfrl.org
 
 import cv2
 
-# create video capture
-cap = cv2.VideoCapture(0)
+CAMERA_DEVICE_ID = 0
 
-# Loop to continuously get images
-while True:
-    # Read the frames from a camera
-    _, frame = cap.read()
 
-    # show image
-    cv2.imshow('frame', frame)
+if __name__=="__main__":
+    try:
+        # create video capture
+        cap = cv2.VideoCapture(CAMERA_DEVICE_ID)
 
-    # if key pressed is 'Esc' then exit the loop
-    if cv2.waitKey(33) == 27:
-        break
+        # Loop to continuously get images
+        while True:
+            # Read the frames from a camera
+            _, frame = cap.read()
 
-# Clean up and exit the program
-cv2.destroyAllWindows()
-cap.release()
+            # show image
+            cv2.imshow('frame', frame)
+
+            # if key pressed is 'Esc' then exit the loop
+            if cv2.waitKey(33) == 27:
+                break
+    except:
+        pass
+    finally:
+        # Clean up and exit the program
+        cv2.destroyAllWindows()
+        cap.release()

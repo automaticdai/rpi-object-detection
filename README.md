@@ -36,6 +36,7 @@ This project is dependent on the following packages:
   - To see a list of all supportive cameras, visit http://elinux.org/RPi_USB_Webcams
 - The official camera module is **NOT** yet supported by this code, but you can modify the code to use it (Google Raspberry Pi Offical Camera with OpenCV). 
   - (*Todo*) In the future I will add support.
+- Jetson Nano also passed the test.
 
 
 ## 3. Applications in this package

@@ -12,10 +12,10 @@ import cv2
 import time
 import numpy as np
 
-cnt_frame = 0
+CAMERA_DEVICE_ID = 0
+MOTION_BLUR = True
 
-# create video capture
-cam = cv2.VideoCapture(0)
+cnt_frame = 0
 
 
 def mse(image_a, image_b):
@@ -30,46 +30,60 @@ def mse(image_a, image_b):
     return err
 
 
-try:
-    while True:
-        # record start time
-        start = time.time()
+if __name__=="__main__":
+    try:
+        # create video capture
+        cap = cv2.VideoCapture(CAMERA_DEVICE_ID)
 
-        # Read the frames from a camera
-        _, frame = cam.read()
+        while True:
+            # ----------------------------------------------------------------------
+            # record start time
+            start = time.time()
+            # ----------------------------------------------------------------------
+            # Read the frames from a camera
+            _, frame_raw = cap.read()
 
-        # Convert to gray image
-        frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            if MOTION_BLUR:
+                # Denoise the frame
+                frame = cv2.GaussianBlur(frame_raw, (3,3),0)
+            else:
+                frame = frame_raw
 
-        # Find edges
-        edges = cv2.Canny(frame_gray,100,200)
+            # Convert to gray image
+            frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-        # Show the original and processed image
-        cv2.imshow('gray', frame_gray)
-        cv2.imshow('edge', edges)
+            # Find edges
+            edges = cv2.Canny(frame_gray,100,200)
 
-        # Calculate MSE
-        if cnt_frame > 0:
-            if mse(frame_gray, frame_gray_p) > 100:
-                print('Frame{0}: Motion Detected!'.format(cnt_frame))
+            # Show the original and processed image
+            cv2.imshow('gray', frame_gray)
+            cv2.imshow('edge', edges)
 
-        # if key pressed is 'Esc' then exit the loop
-        if cv2.waitKey(1)== 27:
-            break
+            # Calculate MSE
+            if cnt_frame > 0:
+                if mse(frame_gray, frame_gray_p) > 100:
+                    print('Frame{0}: Motion Detected!'.format(cnt_frame))
 
-        # record end time
-        end = time.time()
+            # ----------------------------------------------------------------------
+            # record end time
+            end = time.time()
 
-        # calculate FPS
-        seconds = end - start
-        fps = 1.0 / seconds
-        # print("Estimated fps:{0:0.1f}".format(fps));
+            # calculate FPS
+            seconds = end - start
+            fps = 1.0 / seconds
+            print("Estimated fps:{0:0.1f}".format(fps));
 
-        cnt_frame = cnt_frame + 1
-        edges_p = edges
-        frame_gray_p = frame_gray
+            cnt_frame = cnt_frame + 1
+            edges_p = edges
+            frame_gray_p = frame_gray
+            # ----------------------------------------------------------------------
 
-finally:
-    # Clean up and exit the program
-    cv2.destroyAllWindows()
-    cam.release()
+            # if key pressed is 'Esc' then exit the loop
+            if cv2.waitKey(1)== 27:
+                break
+    except:
+        pass
+    finally:
+        # Clean up and exit the program
+        cv2.destroyAllWindows()
+        cap.release()
