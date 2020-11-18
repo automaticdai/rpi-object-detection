@@ -1,5 +1,4 @@
 """
-<Description>
 This is a blob detection program which intend to find the biggest blob
 in a given picture taken by a camera and return its central position.
 
@@ -9,13 +8,10 @@ Key Steps:
 [3] Detect Blobs
 [4] Filter Blobs using a criteria
 [5] Track Blobs
-</Description>
 
-<Author>
-Xiaotian Dai
 YunFei Robotics Labrotary
-Website: http://www.yfrl.org
-</Author>
+Twitter: @yfrobotics
+Website: https://www.yfrl.org
 """
 
 import cv2
@@ -33,11 +29,14 @@ def isset(v):
         return 1
 
 
-if __name__=="__main__":
-
+if __name__ == "__main__":
     try:
         # create video capture
-        cap = cv2.VideoCapture(CAMERA_DEVICE_ID)
+        cap = cv2.VideoCapture(CAMERA_DEVICE_ID, cv2.CAP_V4L)
+
+        # set resolution to 320x240 to reduce latency 
+        cap.set(3,320)
+        cap.set(4,240)
 
         while True:
             # Read the frames frome a camera
@@ -59,7 +58,14 @@ if __name__=="__main__":
             thresh2 = thresh.copy()
 
             # find contours in the threshold image
-            _, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+            (major_ver, minor_ver, subminor_ver) = (cv2.__version__).split('.')
+
+            print(major_ver, minor_ver, subminor_ver)
+
+            if major_ver == "2" or major_ver == "3":
+                _, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+            else:
+                contours, hierarchy = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 
             # finding contour with maximum area and store it as best_cnt
             max_area = 0
@@ -85,8 +91,8 @@ if __name__=="__main__":
             # if key pressed is 'Esc' then exit the loop
             if cv2.waitKey(33) == 27:
                 break
-    except:
-        pass
+    except Exception as e:
+        print(e)
     finally:
         # Clean up and exit the program
         cv2.destroyAllWindows()

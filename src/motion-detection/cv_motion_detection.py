@@ -1,11 +1,9 @@
 """
 Detect any motion in the frame.
 
-<Author>
-Xiaotian Dai
 YunFei Robotics Labrotary
-Website: http://www.yfrl.org
-</Author>
+Twitter: @yfrobotics
+Website: https://www.yfrl.org
 """
 
 import cv2
@@ -30,10 +28,14 @@ def mse(image_a, image_b):
     return err
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     try:
         # create video capture
-        cap = cv2.VideoCapture(CAMERA_DEVICE_ID)
+        cap = cv2.VideoCapture(CAMERA_DEVICE_ID, cv2.CAP_V4L)
+
+        # set resolution to 320x240 to reduce latency 
+        cap.set(3, 320)
+        cap.set(4, 240)
 
         while True:
             # ----------------------------------------------------------------------
@@ -81,8 +83,8 @@ if __name__=="__main__":
             # if key pressed is 'Esc' then exit the loop
             if cv2.waitKey(1)== 27:
                 break
-    except:
-        pass
+    except Exception as e:
+        print(e)
     finally:
         # Clean up and exit the program
         cv2.destroyAllWindows()
