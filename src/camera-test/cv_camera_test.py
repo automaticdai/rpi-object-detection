@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 """
 Display the image captured from the camera. Used as a test program to verify if OpenCV has been properly installed.
 
@@ -9,16 +11,18 @@ Website: https://www.yfrl.org
 import cv2
 
 CAMERA_DEVICE_ID = 0
+IMAGE_WIDTH = 320
+IMAGE_HEIGHT = 240
 
 
 if __name__ == "__main__":
     try:
         # create video capture
-        cap = cv2.VideoCapture(CAMERA_DEVICE_ID, cv2.CAP_V4L)
+        cap = cv2.VideoCapture(CAMERA_DEVICE_ID)
 
         # set resolution to 320x240 to reduce latency 
-        cap.set(3, 320)
-        cap.set(4, 240)
+        cap.set(3, IMAGE_WIDTH)
+        cap.set(4, IMAGE_HEIGHT)
 
         # Loop to continuously get images
         while True:

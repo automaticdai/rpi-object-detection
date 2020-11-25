@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 """
 Detect any motion in the frame.
 
@@ -11,6 +13,8 @@ import time
 import numpy as np
 
 CAMERA_DEVICE_ID = 0
+IMAGE_WIDTH = 320
+IMAGE_HEIGHT = 240
 MOTION_BLUR = True
 
 cnt_frame = 0
@@ -31,16 +35,16 @@ def mse(image_a, image_b):
 if __name__ == "__main__":
     try:
         # create video capture
-        cap = cv2.VideoCapture(CAMERA_DEVICE_ID, cv2.CAP_V4L)
+        cap = cv2.VideoCapture(CAMERA_DEVICE_ID)
 
         # set resolution to 320x240 to reduce latency 
-        cap.set(3, 320)
-        cap.set(4, 240)
+        cap.set(3, IMAGE_WIDTH)
+        cap.set(4, IMAGE_HEIGHT)
 
         while True:
             # ----------------------------------------------------------------------
             # record start time
-            start = time.time()
+            start_time = time.time()
             # ----------------------------------------------------------------------
             # Read the frames from a camera
             _, frame_raw = cap.read()
@@ -68,10 +72,10 @@ if __name__ == "__main__":
 
             # ----------------------------------------------------------------------
             # record end time
-            end = time.time()
+            end_time = time.time()
 
             # calculate FPS
-            seconds = end - start
+            seconds = end_time - start_time
             fps = 1.0 / seconds
             print("Estimated fps:{0:0.1f}".format(fps));
 
