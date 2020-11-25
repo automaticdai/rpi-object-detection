@@ -72,7 +72,11 @@ Track an object based on its color in HSV and print its center position. You can
 ![alt text](./images/cv_object_tracking_color.png)
 
 ### 3.4. Object Tracking (shape-based)
-(ongoing) Detect and track round objects.
+Detect and track round objects using HoughCircles().
+Support of sqaures is coming soon. 
+
+![alt text](./images/cv_object_tracking_shape.png)
+
 
 ### 3.5. Object Tracking (feature-based)
 (ongoing) Detect and track an object based on its feature. Sample images have to be provided.
