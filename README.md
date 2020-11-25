@@ -67,7 +67,7 @@ Detect object movements in the image and print a warning message if any movement
 ![alt text](./images/cv_motion_detection.png)
 
 ### 3.3. Object Tracking (color-based)
-Track an object based on its color in HSV (you can choose your own color by clicking on the object of interest; click multiple times on different points to have a full color coverage) and print its center position. The following demo shows how I track a Nintendo game controller in real-time:
+Track an object based on its color in HSV and print its center position. You can choose your own color by clicking on the object of interest. Click multiple times on different points so a full color space is coveraged. You can hard code the parameter so you don't need to pick them again for the next run. The following demo shows how I track a Nintendo game controller in real-time:
 
 ![alt text](./images/cv_object_tracking_color.png)
 
