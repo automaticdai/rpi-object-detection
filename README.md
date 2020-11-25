@@ -13,11 +13,12 @@
     - [3.3. Object Tracking (color-based)](#33-object-tracking-color-based)
     - [3.4. Object Tracking (shape-based)](#34-object-tracking-shape-based)
     - [3.5. Object Tracking (feature-based)](#35-object-tracking-feature-based)
-    - [3.6. Object detection using Neural Network (TensorFlow Lite)](#36-object-detection-using-neural-network-tensorflow-lite)
+    - [3.6. Object Detection using Neural Network (TensorFlow Lite)](#36-object-detection-using-neural-network-tensorflow-lite)
   - [4. How to Run](#4-how-to-run)
     - [4.1. Install the environment on Raspberry Pi](#41-install-the-environment-on-raspberry-pi)
-    - [4.2. Install TensorFlow Lite (optional; only if you want to use neural netowrk)](#42-install-tensorflow-lite-optional-only-if-you-want-to-use-neural-netowrk)
-    - [4.3. Run the Scripts](#43-run-the-scripts)
+    - [4.2. Install TensorFlow Lite (optional; only if you want to use neural network)](#42-install-tensorflow-lite-optional-only-if-you-want-to-use-neural-network)
+    - [4.3. Run the scripts](#43-run-the-scripts)
+    - [4.4. Change camera resolution](#44-change-camera-resolution)
   - [License](#license)
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
@@ -73,7 +74,7 @@ Track an object based on its color (you can choose between green/red) and print 
 ### 3.5. Object Tracking (feature-based)
 (ongoing) Detect and track an object based on its feature. Sample images have to be provided.
 
-### 3.6. Object detection using Neural Network (TensorFlow Lite)
+### 3.6. Object Detection using Neural Network (TensorFlow Lite)
 (ongoing) Use TensorFlow Lite to recognise objects. 
 
 
@@ -86,7 +87,7 @@ pip3 install virtualenv Pillow numpy scipy
 pip3 install opencv-python
 ```
 
-### 4.2. Install TensorFlow Lite (optional; only if you want to use neural netowrk)
+### 4.2. Install TensorFlow Lite (optional; only if you want to use neural network)
 ```
 wget https://github.com/PINTO0309/Tensorflow-bin/raw/master/tensorflow-2.1.0-cp37-cp37m-linux_armv7l.whl
 pip3 install --upgrade setuptools
@@ -94,10 +95,13 @@ pip3 install tensorflow-2.1.0-cp37-cp37m-linux_armv7l.whl
 pip3 install -e .
 ```
 
-### 4.3. Run the Scripts
+### 4.3. Run the scripts
 Run scripts in the `/src` folder by: `python3 src/$FOLDER_NAME$/$SCRIPT_NAME$.py`
 
 To stop the code, press the `ESC` key on your keyboard.
+
+### 4.4. Change camera resolution
+Changing the resolution will siginicantly impact the FPS. By default it is set to be `320 x 240`, but you can change it to any value that your camera supports at the beginning of each source code (`IMAGE_WIDTH` and `IMAGE_HEIGHT`).
 
 
 ## License
