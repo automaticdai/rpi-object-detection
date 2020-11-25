@@ -57,16 +57,19 @@ Currently the following applications are implemented:
 6. (*Todo*) Object detection using Neural Network (TensorFlow Lite)
 
 ### 3.1. Camera Test
-Test the RPi and OpenCV environment. You are expected to see a pop-up window that has video streams from your USB camera if everything is set up correctly.
+Test the RPi and OpenCV environment. You are expected to see a pop-up window that has video streams from your USB camera if everything is set up correctly. If the window does not appear, you need to check both of (1) your environment; (2) camera connection.
 
-![alt text](./images/cv_camera_test.jpg)
+![alt text](./images/cv_camera_test.png)
 
 ### 3.2. Motion Detection
 Detect object movements in the image and print a warning message if any movement is detected. This detection is based on the mean squared error (MSE) of the difference between two images.
 
+![alt text](./images/cv_motion_detection.png)
+
 ### 3.3. Object Tracking (color-based)
-Track an object based on its color (you can choose between green/red) and print its center position.
-![alt text](./images/cv_object_tracking.jpg)
+Track an object based on its color in HSV (you can choose your own color by clicking on the object of interest; click multiple times on different points to have a full color coverage) and print its center position. The following demo shows how I track a Nintendo game controller in real-time:
+
+![alt text](./images/cv_object_tracking_color.png)
 
 ### 3.4. Object Tracking (shape-based)
 (ongoing) Detect and track round objects.
