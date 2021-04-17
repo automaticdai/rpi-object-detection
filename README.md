@@ -28,7 +28,9 @@
 ![rpi-logo](rpi-logo.png)
 
 ## 1. Introduction
-Using a Raspberry Pi and a camera for computer vision with OpenCV (and TensorFlow Lite). The aim of this project is to provide a starting point of using Pi & CV in your own DIY/hacking projects. Computer vision based on cameras is very powerful and will bring your project to the next level. This allows you to track complicated objects that would otherwise not be possible with other type of sensors (infrared, ultrasonic, LiDAR, etc).
+Using a Raspberry Pi and a camera for computer vision with OpenCV (and TensorFlow Lite). The aim of this project is to provide a starting point of using Pi & CV in your own DIY / hacking projects. Computer vision based on cameras is very powerful and will bring your project to the next level. This allows you to track complicated objects that would otherwise not be possible with other type of sensors (infrared, ultrasonic, LiDAR, etc). 
+
+Note the code is based on Python and OpenCV meaning it is cross-platform. You can run this on other Linux-based platforms as well, e.g. x86/x64 PC, IPC, Jetson, Banana Pi, LattaPanda, BeagleBoard, etc.  
 
 
 ## 2. Dependency
@@ -56,7 +58,7 @@ Currently the following applications are implemented:
 - `src/object-tracking-color`: Object detection & tracking based on color
 - `src/object-tracking-shape`: Object detection & tracking based on shape
 - (*Todo*) Object detection & tracking based on features
-- (*Todo*) Face detection & tracking
+- `src/face-detection`: Face detection & tracking
 - (*Todo*) Object detection using Neural Network (TensorFlow Lite)
 
 ### 3.1. Camera Test
@@ -85,7 +87,9 @@ Support of sqaures is coming soon.
 
 
 ### 3.6. Face Detection and Tracking
-(ongoing)
+Detecting face using Harr Cascade detector.
+
+![cv_face-detection](images/cv_face-detection.png)
 
 
 ### 3.7. Object Detection using Neural Network (TensorFlow Lite)
@@ -115,7 +119,7 @@ Run scripts in the `/src` folder by: `python3 src/$FOLDER_NAME$/$SCRIPT_NAME$.py
 To stop the code, press the `ESC` key on your keyboard.
 
 ### 4.4. Change camera resolution
-Changing the resolution will siginicantly impact the FPS. By default it is set to be `320 x 240`, but you can change it to any value that your camera supports at the beginning of each source code (defined by `IMAGE_WIDTH` and `IMAGE_HEIGHT`). Typical resolutions are:
+Changing the resolution will significantly impact the FPS. By default it is set to be `320 x 240`, but you can change it to any value that your camera supports at the beginning of each source code (defined by `IMAGE_WIDTH` and `IMAGE_HEIGHT`). Typical resolutions are:
 
 - 160 x 120
 - 320 x 240
@@ -128,8 +132,8 @@ Changing the resolution will siginicantly impact the FPS. By default it is set t
 Q: Does this support Jetson?  
 A: Yes. I have tested with my Jetson Nano 4GB.
 
-Q: Does this support Raspberry Pi camera?  
-A: Not at the moment but I will do it later (if it is not that difficult).
+Q: Does this support the Raspberry Pi camera?  
+A: Not at the moment but I will do it later (if this is not that difficult).
 
 
 ## License
