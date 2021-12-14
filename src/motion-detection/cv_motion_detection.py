@@ -1,12 +1,14 @@
 #!/usr/bin/python3
 
-"""
-Detect any motion in the frame.
-
-YunFei Robotics Labrotary
-Twitter: @yfrobotics
-Website: https://www.yfrl.org
-"""
+# ------------------------------------------------------------------------------
+# Detect any motion in the frame.
+# ------------------------------------------------------------------------------
+# automaticdai
+# YF Robotics Labrotary
+# Instagram: yfrobotics
+# Twitter: @yfrobotics
+# Website: https://www.yfrl.org
+# ------------------------------------------------------------------------------
 
 import cv2
 import time

@@ -1,20 +1,22 @@
 #!/usr/bin/python3
 
-"""
-This is a blob detection program which intend to find the biggest blob
-in a given picture taken by a camera and return its central position.
-
-Key Steps:
-1. Image Filtering
-2. Image Segmentation
-3. Detect Blobs
-4. Filter Blobs using a criteria
-5. Track Blobs
-
-YunFei Robotics Labrotary
-Twitter: @yfrobotics
-Website: https://www.yfrl.org
-"""
+# ------------------------------------------------------------------------------
+# This is a blob detection program which intend to find the biggest blob
+# in a given picture taken by a camera and return its central position.
+# 
+# Key Steps:
+# 1. Image Filtering
+# 2. Image Segmentation
+# 3. Detect Blobs
+# 4. Filter Blobs using a criteria
+# 5. Track Blobs
+# ------------------------------------------------------------------------------
+# automaticdai
+# YF Robotics Labrotary
+# Instagram: yfrobotics
+# Twitter: @yfrobotics
+# Website: https://www.yfrl.org
+# ------------------------------------------------------------------------------
 
 import cv2
 import numpy as np

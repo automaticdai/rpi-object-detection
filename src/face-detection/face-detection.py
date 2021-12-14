@@ -1,6 +1,15 @@
 import cv2
 
-# Reference: https://towardsdatascience.com/face-detection-in-2-minutes-using-opencv-python-90f89d7c0f81
+# ------------------------------------------------------------------------------
+# automaticdai
+# YF Robotics Labrotary
+# Instagram: yfrobotics
+# Twitter: @yfrobotics
+# Website: https://www.yfrl.org
+# ------------------------------------------------------------------------------
+# Reference: 
+# - https://towardsdatascience.com/face-detection-in-2-minutes-using-opencv-python-90f89d7c0f81
+# ------------------------------------------------------------------------------
 
 # Load the cascade
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')

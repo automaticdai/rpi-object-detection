@@ -1,15 +1,17 @@
 #!/usr/bin/python3
 
-"""
-Find geometric shaped objects in the image using houghCircles().
-
-Reference: 
-- https://www.pyimagesearch.com/2014/07/21/detecting-circles-images-using-opencv-hough-circles/
-
-YunFei Robotics Labrotary
-Twitter: @yfrobotics
-Website: https://www.yfrl.org
-"""
+# ------------------------------------------------------------------------------
+# Find geometric shaped objects in the image using houghCircles().
+# ------------------------------------------------------------------------------
+# automaticdai
+# YF Robotics Labrotary
+# Instagram: yfrobotics
+# Twitter: @yfrobotics
+# Website: https://www.yfrl.org
+# ------------------------------------------------------------------------------
+# Reference: 
+# - https://www.pyimagesearch.com/2014/07/21/detecting-circles-images-using-opencv-hough-circles/
+# ------------------------------------------------------------------------------
 
 import cv2
 import numpy as np

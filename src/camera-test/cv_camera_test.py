@@ -1,19 +1,20 @@
 #!/usr/bin/python3
 
-"""
-Display the image captured from the camera. Used as a test program to verify if OpenCV has been properly installed.
-
-YunFei Robotics Labrotary
-Twitter: @yfrobotics
-Website: https://www.yfrl.org
-"""
+# ------------------------------------------------------------------------------
+# Display the image captured from the camera. Used as a test program to verify if OpenCV has been properly installed.
+# ------------------------------------------------------------------------------
+# automaticdai
+# YF Robotics Labrotary
+# Instagram: yfrobotics
+# Twitter: @yfrobotics
+# Website: https://www.yfrl.org
+# ------------------------------------------------------------------------------
 
 import cv2
 
 CAMERA_DEVICE_ID = 0
 IMAGE_WIDTH = 320
 IMAGE_HEIGHT = 240
-
 
 if __name__ == "__main__":
     try:
