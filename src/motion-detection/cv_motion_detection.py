@@ -20,6 +20,7 @@ IMAGE_HEIGHT = 240
 MOTION_BLUR = True
 
 cnt_frame = 0
+fps = 0
 
 
 def mse(image_a, image_b):
@@ -33,6 +34,31 @@ def mse(image_a, image_b):
     # the two images are
     return err
 
+def visualize_fps(image, fps: int, window_name: str = "opencv_window"):
+    if len(np.shape(image)) < 3:
+        text_color = (255, 255, 255)  # white
+    else:
+        text_color = (0, 255, 0)  # green
+    row_size = 20  # pixels
+    left_margin = 24  # pixels
+
+    font_size = 1
+    font_thickness = 1
+    perf_start_time = time.perf_counter()
+    cv2.namedWindow(window_name)
+
+    # Show the FPS
+    fps_text = 'FPS = {:.1f}'.format(fps)
+    text_location = (left_margin, row_size)
+    cv2.putText(image, fps_text, text_location, cv2.FONT_HERSHEY_PLAIN,
+                font_size, text_color, font_thickness)
+
+    cv2.imshow(window_name, image)
+
+    # Stop the program if the ESC key is pressed.
+    if cv2.waitKey(1) & 0x7F == ord('q'):
+        print('exit requested')
+        quit()
 
 if __name__ == "__main__":
     try:
@@ -64,8 +90,8 @@ if __name__ == "__main__":
             edges = cv2.Canny(frame_gray,100,200)
 
             # Show the original and processed image
-            cv2.imshow('gray', frame_gray)
-            cv2.imshow('edge', edges)
+            visualize_fps(frame_gray, fps, 'gray')
+            visualize_fps(edges, fps, 'edge')
 
             # Calculate MSE
             if cnt_frame > 0:
