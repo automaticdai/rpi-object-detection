@@ -20,6 +20,7 @@ IMAGE_HEIGHT = 240
 MOTION_BLUR = True
 
 cnt_frame = 0
+fps = 0
 
 
 def mse(image_a, image_b):
@@ -32,6 +33,26 @@ def mse(image_a, image_b):
     # return the MSE, the lower the error, the more "similar"
     # the two images are
     return err
+
+
+def visualize_fps(image, fps: int):
+    if len(np.shape(image)) < 3:
+        text_color = (255, 255, 255)  # white
+    else:
+        text_color = (0, 255, 0)  # green
+    row_size = 20  # pixels
+    left_margin = 24  # pixels
+
+    font_size = 1
+    font_thickness = 1
+
+    # Draw the FPS counter
+    fps_text = 'FPS = {:.1f}'.format(fps)
+    text_location = (left_margin, row_size)
+    cv2.putText(image, fps_text, text_location, cv2.FONT_HERSHEY_PLAIN,
+                font_size, text_color, font_thickness)
+
+    return image
 
 
 if __name__ == "__main__":
@@ -64,8 +85,8 @@ if __name__ == "__main__":
             edges = cv2.Canny(frame_gray,100,200)
 
             # Show the original and processed image
-            cv2.imshow('gray', frame_gray)
-            cv2.imshow('edge', edges)
+            cv2.imshow('gray', visualize_fps(frame_gray, fps))
+            cv2.imshow('edge', visualize_fps(edges, fps))
 
             # Calculate MSE
             if cnt_frame > 0:
