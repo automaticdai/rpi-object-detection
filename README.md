@@ -137,12 +137,14 @@ Changing the resolution will significantly impact the FPS. By default it is set 
 
 
 ## 5. Q&A
-Q1: Does this support Nvidia Jetson?  
+- Q1: Does this support Nvidia Jetson?  
 A1: Yes. I have tested with my Jetson Nano 4GB.
 
-Q2: Does this support the Raspberry Pi camera?  
+- Q2: Does this support the Raspberry Pi camera?  
 A2: Not at the moment but I will do it later (if this is not that difficult).
 
+- Q3: Does this support Raspberry Pi 5?  
+A3: This is not tested (as I haven't received my Pi 5 yet) but it should work out of the box.
 
 ## License
 © This source code is licensed under the [MIT License](LICENSE).
