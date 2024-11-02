@@ -1,2 +1,6 @@
 numpy
 opencv-python
+Pillow
+scipy
+matplotlib
+opencv-contrib-python
