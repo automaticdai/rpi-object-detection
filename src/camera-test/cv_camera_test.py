@@ -9,10 +9,16 @@
 # Twitter: @yfrobotics
 # Website: https://www.yfrl.org
 # ------------------------------------------------------------------------------
+# Add src directory to the path
+import os
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import cv2
 import time
 import numpy as np
+
+from utils.picamera_utils import is_raspberry_camera, get_picamera
 
 CAMERA_DEVICE_ID = 0
 IMAGE_WIDTH = 320
@@ -42,12 +48,16 @@ def visualize_fps(image, fps: int):
 
 if __name__ == "__main__":
     try:
-        # create video capture
-        cap = cv2.VideoCapture(CAMERA_DEVICE_ID)
+        
+        if is_raspberry_camera():
+            picam2 = get_picamera(IMAGE_WIDTH, IMAGE_HEIGHT)
+        else:
+            # create video capture
+            cap = cv2.VideoCapture(CAMERA_DEVICE_ID)
 
-        # set resolution to 320x240 to reduce latency
-        cap.set(3, IMAGE_WIDTH)
-        cap.set(4, IMAGE_HEIGHT)
+            # set resolution to 320x240 to reduce latency
+            cap.set(3, IMAGE_WIDTH)
+            cap.set(4, IMAGE_HEIGHT)
 
         # Loop to continuously get images
         while True:
@@ -56,7 +66,10 @@ if __name__ == "__main__":
             start_time = time.time()
 
             # Read the frames from a camera
-            _, frame = cap.read()
+            if is_raspberry_camera():
+                frame = picam2.capture_array()
+            else:
+                _, frame = cap.read()
 
             # show image
             cv2.imshow('frame', visualize_fps(frame, fps))
