@@ -1,7 +1,7 @@
 #!/bin/bash
 
 is_raspberry_pi() {
-    if grep -q "BCM" /proc/cpuinfo; then
+    if grep -q "Raspberry" /proc/cpuinfo || grep -q "BCM" /proc/cpuinfo; then
         return 0  # Is raspberry Pi
     else
         return 1
