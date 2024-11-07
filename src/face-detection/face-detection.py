@@ -1,20 +1,23 @@
-import cv2
-import numpy as np
-import time
+#!/usr/bin/python3
 
+# ------------------------------------------------------------------------------
+# rpi-object-detection
 # ------------------------------------------------------------------------------
 # automaticdai
 # YF Robotics Labrotary
 # Instagram: yfrobotics
 # Twitter: @yfrobotics
-# Website: https://www.yfrl.org
+# Website: https://yfrobotics.github.io/
 # ------------------------------------------------------------------------------
 # Reference:
 # - https://towardsdatascience.com/face-detection-in-2-minutes-using-opencv-python-90f89d7c0f81
 # ------------------------------------------------------------------------------
 
-fps = 0
+import cv2
+import numpy as np
+import time
 
+fps = 0
 
 def visualize_fps(image, fps: int):
     if len(np.shape(image)) < 3:

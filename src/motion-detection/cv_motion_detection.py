@@ -1,13 +1,15 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------------------
+# rpi-object-detection
+# ------------------------------------------------------------------------------
 # Detect any motion in the frame.
 # ------------------------------------------------------------------------------
 # automaticdai
 # YF Robotics Labrotary
 # Instagram: yfrobotics
 # Twitter: @yfrobotics
-# Website: https://www.yfrl.org
+# Website: https://yfrobotics.github.io/
 # ------------------------------------------------------------------------------
 
 import cv2
@@ -60,7 +62,7 @@ if __name__ == "__main__":
         # create video capture
         cap = cv2.VideoCapture(CAMERA_DEVICE_ID)
 
-        # set resolution to 320x240 to reduce latency 
+        # set resolution to 320x240 to reduce latency
         cap.set(3, IMAGE_WIDTH)
         cap.set(4, IMAGE_HEIGHT)
 

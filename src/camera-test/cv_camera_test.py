@@ -1,17 +1,21 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------------------
-# Display the image captured from the camera. Used as a test program to verify if OpenCV has been properly installed.
+# rpi-object-detection
+# ------------------------------------------------------------------------------
+# Display the image captured from the camera. Used as a test program to verify
+# if OpenCV has been properly installed.
 # ------------------------------------------------------------------------------
 # automaticdai
 # YF Robotics Labrotary
 # Instagram: yfrobotics
 # Twitter: @yfrobotics
-# Website: https://www.yfrl.org
+# Website: https://yfrobotics.github.io/
 # ------------------------------------------------------------------------------
-# Add src directory to the path
+
 import os
 import sys
+# Add src directory to the path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import cv2
@@ -50,7 +54,7 @@ def visualize_fps(image, fps: int):
 
 if __name__ == "__main__":
     try:
-        
+
         if IS_RASPI_CAMERA:
             cap = get_picamera(IMAGE_WIDTH, IMAGE_HEIGHT)
             cap.start()

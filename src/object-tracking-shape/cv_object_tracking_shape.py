@@ -1,15 +1,17 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------------------
+# rpi-object-detection
+# ------------------------------------------------------------------------------
 # Find geometric shaped objects in the image using houghCircles().
 # ------------------------------------------------------------------------------
 # automaticdai
 # YF Robotics Labrotary
 # Instagram: yfrobotics
 # Twitter: @yfrobotics
-# Website: https://www.yfrl.org
+# Website: https://yfrobotics.github.io/
 # ------------------------------------------------------------------------------
-# Reference: 
+# Reference:
 # - https://www.pyimagesearch.com/2014/07/21/detecting-circles-images-using-opencv-hough-circles/
 # ------------------------------------------------------------------------------
 
@@ -56,7 +58,7 @@ if __name__ == "__main__":
         # create video capture
         cap = cv2.VideoCapture(CAMERA_DEVICE_ID)
 
-        # set resolution to 320x240 to reduce latency 
+        # set resolution to 320x240 to reduce latency
         cap.set(3, IMAGE_WIDTH)
         cap.set(4, IMAGE_HEIGHT)
 
@@ -70,14 +72,14 @@ if __name__ == "__main__":
 
             # Or get it from a JPEG
             # frame = cv2.imread('frame0010.jpg', 1)
-        
+
             # convert the image into gray color
             output = frame.copy()
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
             # detect circles in the image
             circles = cv2.HoughCircles(gray, cv2.HOUGH_GRADIENT, 1.2, 100)
-            
+
             # ensure at least some circles were found
             if circles is not None:
                 # convert the (x, y) coordinates and radius of the circles to integers
@@ -88,7 +90,7 @@ if __name__ == "__main__":
                     # corresponding to the center of the circle
                     cv2.circle(output, (x, y), r, (0, 255, 0), 4)
                     cv2.rectangle(output, (x - 5, y - 5), (x + 5, y + 5), (0, 128, 255), -1)
-            
+
             # show the output image
             cv2.imshow('img', np.hstack([frame, output]))
             # cv2.imshow("frame", np.hstack([visualize_fps(frame, fps), visualize_fps(output, fps)]))

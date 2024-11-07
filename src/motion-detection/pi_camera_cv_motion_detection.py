@@ -1,15 +1,7 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------------------
-# Detect any motion in the frame.
-# ------------------------------------------------------------------------------
-# automaticdai
-# YF Robotics Labrotary
-# Instagram: yfrobotics
-# Twitter: @yfrobotics
-# Website: https://www.yfrl.org
-# --------------------------------------------#!/usr/bin/python3
-
+# rpi-object-detection
 # ------------------------------------------------------------------------------
 # Detect any motion in the frame.
 # ------------------------------------------------------------------------------
@@ -17,8 +9,8 @@
 # YF Robotics Labrotary
 # Instagram: yfrobotics
 # Twitter: @yfrobotics
-# Website: https://www.yfrl.org
-# ------------------------------------------------------------------------------
+# Website: https://yfrobotics.github.io/
+# --------------------------------------------
 
 import cv2
 import time
@@ -70,7 +62,7 @@ def visualize_fps(image, fps: int):
 
 if __name__ == "__main__":
     try:
-		
+
         while True:
             # ----------------------------------------------------------------------
             # record start time

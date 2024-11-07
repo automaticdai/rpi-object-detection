@@ -1,13 +1,15 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------------------
+# rpi-object-detection
+# ------------------------------------------------------------------------------
 # automaticdai
 # YF Robotics Labrotary
 # Instagram: yfrobotics
 # Twitter: @yfrobotics
-# Website: https://www.yfrl.org
+# Website: https://yfrobotics.github.io/
 # ------------------------------------------------------------------------------
-# References: 
+# References:
 # - https://circuitdigest.com/tutorial/real-life-object-detection-using-opencv-python-detecting-objects-in-live-video
 # - https://docs.opencv.org/4.x/d1/d89/tutorial_py_orb.html
 # ------------------------------------------------------------------------------
@@ -30,7 +32,7 @@ def ORB_detector(new_image, image_template):
     # Detect keypoints of rotated image
     (kp2, des2) = orb.detectAndCompute(image_template, None)
 
-    # Create matcher 
+    # Create matcher
     # Note we're no longer using Flannbased matching
     bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
     # Do matching
@@ -67,7 +69,7 @@ fps = 0
 cap = cv2.VideoCapture(0)
 
 # Load our image template, this is our reference image
-image_template = cv2.imread('simple.png', 0) 
+image_template = cv2.imread('simple.png', 0)
 
 while True:
     # ----------------------------------------------------------------------
@@ -94,15 +96,15 @@ while True:
     # Flip frame orientation horizontally
     frame = cv2.flip(frame,1)
 
-    # Get number of ORB matches 
+    # Get number of ORB matches
     matches = ORB_detector(cropped, image_template)
 
-    # Display status string showing the current no. of matches 
+    # Display status string showing the current no. of matches
     output_string = "# of Matches = " + str(matches)
     cv2.putText(frame, output_string, (50,450), cv2.FONT_HERSHEY_COMPLEX, 1, (250,0,0), 2)
 
     # Our threshold to indicate object deteciton
-    # For new images or lightening conditions you may need to experiment a bit 
+    # For new images or lightening conditions you may need to experiment a bit
     # Note: The ORB detector to get the top 1000 matches, 350 is essentially a min 35% match
     threshold = 200
 
