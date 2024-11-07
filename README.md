@@ -29,7 +29,7 @@
 ![rpi-logo](rpi-logo.png)
 
 ## 1. Introduction
-Using a Raspberry Pi and a camera module for computer vision with OpenCV (and TensorFlow Lite). The aim of this project is to provide a starting point of using RPi & CV in your own DIY / maker projects. Computer vision based on cameras is very powerful and will bring your project to the next level. This allows you to track complicated objects that would otherwise not be possible with other type of sensors (infrared, ultrasonic, LiDAR, etc). 
+Using a Raspberry Pi and a camera module for computer vision with OpenCV (and TensorFlow Lite). The aim of this project is to provide a starting point of using RPi & CV in your own DIY / maker projects. Computer vision based on cameras is very powerful and will bring your project to the next level. This allows you to track complicated objects that would otherwise not be possible with other type of sensors (infrared, ultrasonic, LiDAR, etc).
 
 Note the code is based on Python and OpenCV meaning it is cross-platform. You can run this on other Linux-based platforms as well, e.g. x86/x64 PC, IPC, Jetson, Banana Pi, LattaPanda, BeagleBoard, etc.  
 
@@ -43,16 +43,18 @@ This project is dependent on the following packages:
 - NumPy
 - SciPy
 - Matplotlib
+- YOLO (*optional*)
 - TensorFlow Lite (*optional*)
 
 ### 2.2. Hardware support
-- Support Raspberry 1 Model B, Raspberry Pi 2, Raspberry Pi Zero and Raspberry Pi 3/4 (preferable)
-  - Different boards will have very varied performance: RPi 3/4 are preferable as they have more powerful CPUs; RPi 1/2 may be struggling and produce very low FPS, in which case you can further reduce the camera resolution (160 x 120).
+- Support Raspberry Pi 1 Model B, Raspberry Pi 2, Raspberry Pi Zero and Raspberry Pi 3/4 (preferable)
+  - Different boards will have very varied performance.
+  - RPi 3/4 are preferable as they have more powerful CPUs;
+  - RPi 1/2 may be struggling and produce very low FPS, in which case you can further reduce the camera resolution (160 x 120).
 - Nvidia Jetson Nano (A01) also passed the test.
 - Any USB camera supported by Raspberry Pi  
   - To see a list of all supportive cameras, visit http://elinux.org/RPi_USB_Webcams
-- The official camera module is **NOT** yet supported by this code, but you can modify the code to use it (Google Raspberry Pi Offical Camera with OpenCV). 
-  - (*Todo*) I will add support in the future.
+- The official RPi camera module is supported through `Picamera2`.
 
 
 ## 3. What's in this repository
@@ -64,8 +66,9 @@ Currently the following applications are implemented:
 - `src/object-tracking-shape`: Object detection & tracking based on shape
 - `src/object-tracking-feature`: Object detection & tracking based on features using ORB
 - `src/face-detection`: Face detection & tracking
+- (*Todo*) Object detection using YOLO (RPi 3/4/5 only)
 - (*Todo*) Object detection using Neural Network (TensorFlow Lite)
-- (*Todo*) Object detection using YOLO v3 (RPi 4 only)
+
 
 ### 3.1. Camera Test
 Test the RPi and OpenCV environment. You are expected to see a pop-up window that has video streams from your USB camera if everything is set up correctly. If the window does not appear, you need to check both of (1) your environment; (2) camera connection.
@@ -84,7 +87,7 @@ Track an object based on its color in HSV and print its center position. You can
 
 ### 3.4. Shape-based Object Detection and Tracking
 Detect and track round objects using HoughCircles().
-Support of sqaures is coming soon. 
+Support of sqaures is coming soon.
 
 ![alt text](./images/cv_object_tracking_shape.png)
 
@@ -93,15 +96,17 @@ Detect and track an object using its feature. The algorithm I selected here is O
 
 ![alt text](./images/cv_orb.png)
 
-
 ### 3.6. Face Detection and Tracking
 Detecting face using Harr Cascade detector.
 
 ![cv_face-detection](images/cv_face-detection.png)
 
+### 3.7. Object Detection using YOLO
+(ongoing) Use YOLO (You Only Look Once) for object detection.  
+Note an alternative instruction can be found at: [Quick Start Guide: Raspberry Pi with Ultralytics YOLO11](https://docs.ultralytics.com/guides/raspberry-pi/).
 
-### 3.7. Object Detection using Neural Network (TensorFlow Lite)
-(ongoing) Use TensorFlow Lite to recognise objects. 
+### 3.8. Object Detection using Neural Network (TensorFlow Lite)
+(ongoing) Use TensorFlow Lite to recognise objects.
 
 
 ## 4. How to Run
@@ -113,6 +118,13 @@ pip3 install virtualenv Pillow numpy scipy matplotlib
 pip3 install opencv-python opencv-contrib-python
 ```
 
+or use the installation script:
+
+```
+chmod +x install.sh
+./install.sh
+```
+
 ### 4.2. Install TensorFlow Lite (optional; only if you want to use the neural network example)
 ```
 wget https://github.com/PINTO0309/Tensorflow-bin/raw/master/tensorflow-2.1.0-cp37-cp37m-linux_armv7l.whl
@@ -122,7 +134,11 @@ pip3 install -e .
 ```
 
 ### 4.3. Run the scripts
-Run scripts in the `/src` folder by: `python3 src/$FOLDER_NAME$/$SCRIPT_NAME$.py`
+Run scripts in the `/src` folder by:
+
+```
+python3 src/$FOLDER_NAME$/$SCRIPT_NAME$.py
+```
 
 To stop the code, press the `ESC` key on your keyboard.
 
@@ -137,14 +153,18 @@ Changing the resolution will significantly impact the FPS. By default it is set 
 
 
 ## 5. Q&A
-- Q1: Does this support Nvidia Jetson?  
+**Q1: Does this support Nvidia Jetson?**  
 A1: Yes. I have tested with my Jetson Nano 4GB.
 
-- Q2: Does this support the Raspberry Pi camera?  
-A2: Not at the moment but I will do it later (if this is not that difficult).
+**Q2: Does this support the Raspberry Pi camera?**  
+A2: This is implemented in [issue #16](https://github.com/automaticdai/rpi-object-detection/pull/16).
 
-- Q3: Does this support Raspberry Pi 5?  
-A3: This is not tested (as I haven't received my Pi 5 yet) but it should work out of the box.
+**Q3: Does this support Raspberry Pi 5?**  
+A3: This is not officially tested (as I haven't received my Pi 5 yet) but it should work out of the box.
+
+**Q4: Can we run this project on Ubuntu server 22.04?**  
+A4: It is not tested but you should be able to run 90% of the things here.
+
 
 ## License
 © This source code is licensed under the [MIT License](LICENSE).
