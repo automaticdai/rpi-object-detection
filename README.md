@@ -112,10 +112,8 @@ Note an alternative instruction can be found at: [Quick Start Guide: Raspberry P
 ## 4. How to Run
 ### 4.1. Install the environment on Raspberry Pi
 ```
-sudo apt-get install libopencv-dev
-sudo apt-get install libatlas-base-dev
-pip3 install virtualenv Pillow numpy scipy matplotlib
-pip3 install opencv-python opencv-contrib-python
+sudo apt-get install -y libopencv-dev libatlas-base-dev
+pip3 install virtualenv Pillow numpy scipy matplotlib opencv-python opencv-contrib-python
 ```
 
 or use the installation script:

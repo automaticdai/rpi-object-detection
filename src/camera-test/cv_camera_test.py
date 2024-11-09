@@ -15,13 +15,13 @@
 
 import os
 import sys
-# Add src directory to the path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 import cv2
 import time
 import numpy as np
 import time
+
+# Add src directory to the path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from utils.picamera_utils import is_raspberry_camera, get_picamera
 

@@ -12,18 +12,28 @@
 # Website: https://yfrobotics.github.io/
 # ------------------------------------------------------------------------------
 
+import os
+import sys
 import cv2
 import time
 import numpy as np
+import time
+
+# Add src directory to the path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from utils.picamera_utils import is_raspberry_camera, get_picamera
 
 CAMERA_DEVICE_ID = 0
 IMAGE_WIDTH = 320
 IMAGE_HEIGHT = 240
+IS_RASPI_CAMERA = is_raspberry_camera()
 MOTION_BLUR = True
 
 cnt_frame = 0
 fps = 0
 
+print("Using raspi camera: ", IS_RASPI_CAMERA)
 
 def mse(image_a, image_b):
     # the 'Mean Squared Error' between the two images is the
@@ -60,11 +70,15 @@ def visualize_fps(image, fps: int):
 if __name__ == "__main__":
     try:
         # create video capture
-        cap = cv2.VideoCapture(CAMERA_DEVICE_ID)
-
-        # set resolution to 320x240 to reduce latency
-        cap.set(3, IMAGE_WIDTH)
-        cap.set(4, IMAGE_HEIGHT)
+        if IS_RASPI_CAMERA:
+            cap = get_picamera(IMAGE_WIDTH, IMAGE_HEIGHT)
+            cap.start()
+        else:
+            # create video capture
+            cap = cv2.VideoCapture(CAMERA_DEVICE_ID)
+            # set resolution to 320x240 to reduce latency
+            cap.set(3, IMAGE_WIDTH)
+            cap.set(4, IMAGE_HEIGHT)
 
         while True:
             # ----------------------------------------------------------------------
@@ -72,7 +86,10 @@ if __name__ == "__main__":
             start_time = time.time()
             # ----------------------------------------------------------------------
             # Read the frames from a camera
-            _, frame_raw = cap.read()
+            if IS_RASPI_CAMERA:
+                frame_raw = cap.capture_array()
+            else:
+                _, frame_raw = cap.read()
 
             if MOTION_BLUR:
                 # Denoise the frame
@@ -117,4 +134,4 @@ if __name__ == "__main__":
     finally:
         # Clean up and exit the program
         cv2.destroyAllWindows()
-        cap.release()
+        cap.close() if IS_RASPI_CAMERA else cap.release()

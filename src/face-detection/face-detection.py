@@ -12,12 +12,26 @@
 # Reference:
 # - https://towardsdatascience.com/face-detection-in-2-minutes-using-opencv-python-90f89d7c0f81
 # ------------------------------------------------------------------------------
-
+import os
+import sys
 import cv2
+import time
 import numpy as np
 import time
 
+# Add src directory to the path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from utils.picamera_utils import is_raspberry_camera, get_picamera
+
+CAMERA_DEVICE_ID = 0
+IMAGE_WIDTH = 320
+IMAGE_HEIGHT = 240
+IS_RASPI_CAMERA = is_raspberry_camera()
 fps = 0
+base_dir = os.path.dirname(os.path.abspath(__file__))
+
+print("Using raspi camera: ", IS_RASPI_CAMERA)
 
 def visualize_fps(image, fps: int):
     if len(np.shape(image)) < 3:
@@ -40,10 +54,18 @@ def visualize_fps(image, fps: int):
 
 
 # Load the cascade
-face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+face_cascade = cv2.CascadeClassifier(os.path.join(base_dir, 'haarcascade_frontalface_default.xml'))
 
 # To capture video from webcam.
-cap = cv2.VideoCapture(0)
+if IS_RASPI_CAMERA:
+    cap = get_picamera(IMAGE_WIDTH, IMAGE_HEIGHT)
+    cap.start()
+else:
+    # create video capture
+    cap = cv2.VideoCapture(CAMERA_DEVICE_ID)
+    # set resolution to 320x240 to reduce latency
+    cap.set(3, IMAGE_WIDTH)
+    cap.set(4, IMAGE_HEIGHT)
 # To use a video file as input
 # cap = cv2.VideoCapture('filename.mp4')
 
@@ -51,17 +73,20 @@ while True:
     # ----------------------------------------------------------------------
     # record start time
     start_time = time.time()
-    # Read the frame
-    _, img = cap.read()
+    # Read the frames from a camera
+    if IS_RASPI_CAMERA:
+        frame = cap.capture_array()
+    else:
+        _, frame = cap.read()
     # Convert to grayscale
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     # Detect the faces
     faces = face_cascade.detectMultiScale(gray, 1.1, 4)
     # Draw the rectangle around each face
     for (x, y, w, h) in faces:
-        cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
+        cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
     # Display
-    cv2.imshow('img', visualize_fps(img, fps))
+    cv2.imshow('img', visualize_fps(frame, fps))
     # ----------------------------------------------------------------------
     # record end time
     end_time = time.time()
@@ -75,4 +100,4 @@ while True:
         break
 
 # Release the VideoCapture object
-cap.release()
+cap.close() if IS_RASPI_CAMERA else cap.release()

@@ -20,20 +20,31 @@
 # Website: https://yfrobotics.github.io/
 # ------------------------------------------------------------------------------
 
+import os
+import sys
 import cv2
+import time
 import numpy as np
 import time
+import math
+
+# Add src directory to the path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from utils.picamera_utils import is_raspberry_camera, get_picamera
 
 CAMERA_DEVICE_ID = 0
 IMAGE_WIDTH = 320
 IMAGE_HEIGHT = 240
-fps = 0
+IS_RASPI_CAMERA = is_raspberry_camera()
 
+fps = 0
 hsv_min = np.array((50, 80, 80))
 hsv_max = np.array((120, 255, 255))
 
 colors = []
 
+print("Using raspi camera: ", IS_RASPI_CAMERA)
 
 def isset(v):
     try:
@@ -136,19 +147,27 @@ def visualize_fps(image, fps: int):
 
 if __name__ == "__main__":
     try:
-        # create video capture
-        cap = cv2.VideoCapture(CAMERA_DEVICE_ID)
-
-        # set resolution to 320x240 to reduce latency
-        cap.set(3, IMAGE_WIDTH)
-        cap.set(4, IMAGE_HEIGHT)
+        # To capture video from webcam.
+        if IS_RASPI_CAMERA:
+            cap = get_picamera(IMAGE_WIDTH, IMAGE_HEIGHT)
+            cap.start()
+        else:
+            # create video capture
+            cap = cv2.VideoCapture(CAMERA_DEVICE_ID)
+            # set resolution to 320x240 to reduce latency
+            cap.set(3, IMAGE_WIDTH)
+            cap.set(4, IMAGE_HEIGHT)
 
         while True:
             # ----------------------------------------------------------------------
             # record start time
             start_time = time.time()
             # Read the frames frome a camera
-            _, frame = cap.read()
+            if IS_RASPI_CAMERA:
+                frame = cap.capture_array()
+            else:
+                _, frame = cap.read()
+
             frame = cv2.blur(frame,(3,3))
 
             # Or get it from a JPEG
@@ -225,4 +244,4 @@ if __name__ == "__main__":
     finally:
         # Clean up and exit the program
         cv2.destroyAllWindows()
-        cap.release()
+        cap.close() if IS_RASPI_CAMERA else cap.release()
