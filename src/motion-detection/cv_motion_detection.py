@@ -131,4 +131,5 @@ if __name__ == "__main__":
     finally:
         # Clean up and exit the program
         cv2.destroyAllWindows()
-        cap.release()
+        cap.close() if IS_RASPI_CAMERA else cap.release()
+
