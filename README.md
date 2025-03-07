@@ -29,7 +29,7 @@
 ![rpi-logo](rpi-logo.png)
 
 ## 1. Introduction
-Using a Raspberry Pi and a camera module for computer vision with OpenCV (and TensorFlow Lite). The aim of this project is to provide a starting point of using RPi & CV in your own DIY / maker projects. Computer vision based on cameras is very powerful and will bring your project to the next level. This allows you to track complicated objects that would otherwise not be possible with other type of sensors (infrared, ultrasonic, LiDAR, etc).
+Using a Raspberry Pi and a camera module for computer vision with OpenCV, YOLO, and TensorFlow Lite. The aim of this project is to provide a starting point for using RPi & CV in your own DIY / maker projects. Computer vision based on cameras is very powerful and will bring your project to the next level. This allows you to track complicated objects that would otherwise not be possible with other types of sensors (infrared, ultrasonic, LiDAR, etc).
 
 Note the code is based on Python and OpenCV meaning it is cross-platform. You can run this on other Linux-based platforms as well, e.g. x86/x64 PC, IPC, Jetson, Banana Pi, LattaPanda, BeagleBoard, etc.  
 
@@ -47,9 +47,9 @@ This project is dependent on the following packages:
 - TensorFlow Lite (*optional*)
 
 ### 2.2. Hardware support
-- Support Raspberry Pi 1 Model B, Raspberry Pi 2, Raspberry Pi Zero and Raspberry Pi 3/4 (preferable)
-  - Different boards will have very varied performance.
-  - RPi 3/4 are preferable as they have more powerful CPUs;
+- Support Raspberry Pi 1 Model B, Raspberry Pi 2, Raspberry Pi Zero and Raspberry Pi 3/4/5 (preferable)
+  - Different boards will have very varied performances.
+  - RPi 3/4/5 are preferable as they have more powerful CPUs;
   - RPi 1/2 may be struggling and produce very low FPS, in which case you can further reduce the camera resolution (160 x 120).
 - Nvidia Jetson Nano (A01) also passed the test.
 - Any USB camera supported by Raspberry Pi  
@@ -58,7 +58,7 @@ This project is dependent on the following packages:
 
 
 ## 3. What's in this repository
-Currently the following applications are implemented:
+Currently, the following applications are implemented:
 
 - `src/camera-test`: Test if the camera is working
 - `src/motion-detection`: Detect any motion in the frame
@@ -81,13 +81,13 @@ Detect object movements in the image and print a warning message if any movement
 ![alt text](./images/cv_motion_detection.png)
 
 ### 3.3. Color-based Object Detection and Tracking
-Track an object based on its color in HSV and print its center position. You can choose your own color by clicking on the object of interest. Click multiple times on different points so a full color space is coveraged. You can hard code the parameter so you don't need to pick them again for the next run. The following demo shows how I track a Nintendo game controller in real-time:
+Track an object based on its color in HSV and print its center position. You can choose your own color by clicking on the object of interest. Click multiple times on different points so a full color space is coveraged. You can hard code the parameters so you don't need to pick them again for the next run. The following demo shows how I track a Nintendo game controller in real-time:
 
 ![alt text](./images/cv_object_tracking_color.png)
 
 ### 3.4. Shape-based Object Detection and Tracking
 Detect and track round objects using HoughCircles().
-Support of sqaures is coming soon.
+Support of squares is coming soon.
 
 ![alt text](./images/cv_object_tracking_shape.png)
 
