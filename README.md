@@ -2,6 +2,8 @@
 
 ![](https://img.shields.io/github/stars/automaticdai/rpi-object-detection) ![](https://img.shields.io/github/forks/automaticdai/rpi-object-detection) ![](https://img.shields.io/github/license/automaticdai/rpi-object-detection)
 
+![rpi-logo](./images/cover.png)
+
 - [Raspberry Pi Real-Time Object Detection and Tracking](#raspberry-pi-real-time-object-detection-and-tracking)
   * [1. Introduction](#1-introduction)
   * [2. Dependency](#2-dependency)
@@ -24,6 +26,7 @@
   * [License](#license)
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
 
 
 ![rpi-logo](rpi-logo.png)
