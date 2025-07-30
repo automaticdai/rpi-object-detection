@@ -26,10 +26,9 @@ if is_raspberry_pi; then
     pip3 install Pillow numpy scipy matplotlib
 
     echo "Installing opencv-python and opencv-contrib-python..."
-    pip3 install opencv-python opencv-contrib-python
+    pip3 install opencv-python opencv-contrib-python ultralytics
 
     echo "Installation of dependencies completed for Raspberry Pi!"
-
 else
     echo "Non-Raspberry Pi system detected. Running standard script..."
 
@@ -56,7 +55,7 @@ else
     source venv/bin/activate
 
     echo "Installing dependencies: Pillow, numpy, scipy, matplotlib, opencv-python, and opencv-contrib-python..."
-    pip install Pillow numpy scipy matplotlib opencv-python opencv-contrib-python
+    pip install Pillow numpy scipy matplotlib opencv-python opencv-contrib-python ultralytics
 
     if [ -f requirements.txt ]; then
         echo "Installing dependencies from requirements.txt..."

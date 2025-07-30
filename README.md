@@ -29,7 +29,7 @@
 
 
 
-![rpi-logo](rpi-logo.png)
+![rpi-logo](./images/rpi-logo.png)
 
 ## 1. Introduction
 Using a Raspberry Pi and a camera module for computer vision with OpenCV, YOLO, and TensorFlow Lite. The aim of this project is to provide a starting point for using RPi & CV in your own DIY / maker projects. Computer vision based on cameras is very powerful and will bring your project to the next level. This allows you to track complicated objects that would otherwise not be possible with other types of sensors (infrared, ultrasonic, LiDAR, etc).
@@ -46,15 +46,16 @@ This project is dependent on the following packages:
 - NumPy
 - SciPy
 - Matplotlib
-- YOLO (*optional*)
-- TensorFlow Lite (*optional*)
+- Ultralytics
 
 ### 2.2. Hardware support
 - Support Raspberry Pi 1 Model B, Raspberry Pi 2, Raspberry Pi Zero and Raspberry Pi 3/4/5 (preferable)
   - Different boards will have very varied performances.
   - RPi 3/4/5 are preferable as they have more powerful CPUs;
   - RPi 1/2 may be struggling and produce very low FPS, in which case you can further reduce the camera resolution (160 x 120).
-- Nvidia Jetson Nano (A01) also passed the test.
+- Nvidia Jetson 
+  - Jetson Nano (A01) also passed the test.
+  - Jetson Orin should work as well.
 - Any USB camera supported by Raspberry Pi  
   - To see a list of all supportive cameras, visit http://elinux.org/RPi_USB_Webcams
 - The official RPi camera module is supported through `Picamera2`.
@@ -69,7 +70,7 @@ Currently, the following applications are implemented:
 - `src/object-tracking-shape`: Object detection & tracking based on shape
 - `src/object-tracking-feature`: Object detection & tracking based on features using ORB
 - `src/face-detection`: Face detection & tracking
-- (*Todo*) Object detection using YOLO (RPi 3/4/5 only)
+- `src/object-detection-yolo`: Object detection using YOLO (RPi 3/4/5 only)
 - (*Todo*) Object detection using Neural Network (TensorFlow Lite)
 
 
@@ -150,7 +151,7 @@ Changing the resolution will significantly impact the FPS. By default it is set 
 - 320 x 240
 - 640 x 480 (480p)
 - 1280 x 720 (720p)
-- 1920 x 1080 (1080p; make sure your camera supports this high resolution.)
+- 1920 x 1080 (1080p: make sure your camera supports this high resolution.)
 
 
 ## 5. Q&A
@@ -158,14 +159,19 @@ Changing the resolution will significantly impact the FPS. By default it is set 
 A1: Yes. I have tested with my Jetson Nano 4GB.
 
 **Q2: Does this support the Raspberry Pi camera?**  
-A2: This is implemented in [issue #16](https://github.com/automaticdai/rpi-object-detection/pull/16).
+A2: This is implemented in [issue [#16]](https://github.com/automaticdai/rpi-object-detection/pull/16).
 
 **Q3: Does this support Raspberry Pi 5?**  
 A3: This is not officially tested (as I haven't received my Pi 5 yet) but it should work out of the box.
 
 **Q4: Can we run this project on Ubuntu server 22.04?**  
-A4: It is not tested but you should be able to run 90% of the things here.
+A4: It is not officially tested but you should be able to run 99% of the things here.
 
+**Q5: I am using virtual environment and get a message "no module called libcamera" issue**  
+A5: A simple solution would be [(Reference)](https://forums.raspberrypi.com/viewtopic.php?t=361758):  
+`python3 -m venv --system-site-packages env`
+
+Thanks [VgerTest](https://github.com/VgerTest) for [issue [#20]](https://github.com/automaticdai/rpi-object-detection/issues/20).
 
 ## License
 © This source code is licensed under the [MIT License](LICENSE).

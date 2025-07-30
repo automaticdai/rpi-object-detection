@@ -12,3 +12,4 @@ pyparsing
 python-dateutil
 scipy
 six
+ultralytics

@@ -54,7 +54,6 @@ def visualize_fps(image, fps: int):
 
 if __name__ == "__main__":
     try:
-
         if IS_RASPI_CAMERA:
             cap = get_picamera(IMAGE_WIDTH, IMAGE_HEIGHT)
             cap.start()
