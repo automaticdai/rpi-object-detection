@@ -34,13 +34,13 @@
 ## 1. Introduction
 Using a Raspberry Pi and a camera module for computer vision with OpenCV, YOLO, and TensorFlow Lite. The aim of this project is to provide a starting point for using RPi & CV in your own DIY / maker projects. Computer vision based on cameras is very powerful and will bring your project to the next level. This allows you to track complicated objects that would otherwise not be possible with other types of sensors (infrared, ultrasonic, LiDAR, etc).
 
-Note the code is based on Python and OpenCV meaning it is cross-platform. You can run this on other Linux-based platforms as well, e.g. x86/x64 PC, IPC, Jetson, Banana Pi, LattaPanda, BeagleBoard, etc.  
+Note the code is based on Python and OpenCV meaning it is cross-platform. You can run this on other Linux-based platforms as well, e.g. x86/x64 PC, IPC, Jetson, Banana Pi, LattaPanda, BeagleBoard, etc.
 
 
 ## 2. Dependency
 ### 2.1. Packages requirement
 This project is dependent on the following packages:
-- Python >= 3.5
+- Python >= 3.6.9
 - OpenCV-Python
 - OpenCV-Contrib-Python
 - NumPy
@@ -49,14 +49,14 @@ This project is dependent on the following packages:
 - Ultralytics
 
 ### 2.2. Hardware support
-- Support Raspberry Pi 1 Model B, Raspberry Pi 2, Raspberry Pi Zero and Raspberry Pi 3/4/5 (preferable)
+- Support Raspberry Pi 1 Model B, Raspberry Pi 2, Raspberry Pi Zero, and Raspberry Pi 3/4/5 (preferable)
   - Different boards will have very varied performances.
   - RPi 3/4/5 are preferable as they have more powerful CPUs;
   - RPi 1/2 may be struggling and produce very low FPS, in which case you can further reduce the camera resolution (160 x 120).
 - Nvidia Jetson 
   - Jetson Nano (A01) also passed the test.
-  - Jetson Orin should work as well.
-- Any USB camera supported by Raspberry Pi  
+  - Jetson Orin Nano should work as well.
+- Any USB camera supported by Raspberry Pi
   - To see a list of all supportive cameras, visit http://elinux.org/RPi_USB_Webcams
 - The official RPi camera module is supported through `Picamera2`.
 
@@ -106,8 +106,8 @@ Detecting face using Harr Cascade detector.
 ![cv_face-detection](images/cv_face-detection.png)
 
 ### 3.7. Object Detection using YOLO
-(ongoing) Use YOLO (You Only Look Once) for object detection.  
-Note an alternative instruction can be found at: [Quick Start Guide: Raspberry Pi with Ultralytics YOLO11](https://docs.ultralytics.com/guides/raspberry-pi/).
+Use YOLO (You Only Look Once) for object detection.  
+Note this code is based on Ultralytics YOLO. The instruction can be found at their website: [Quick Start Guide: Raspberry Pi with Ultralytics YOLO11](https://docs.ultralytics.com/guides/raspberry-pi/). Double check if you need to use it in a commercialised project! 
 
 ### 3.8. Object Detection using Neural Network (TensorFlow Lite)
 (ongoing) Use TensorFlow Lite to recognise objects.
@@ -164,7 +164,7 @@ A2: This is implemented in [issue [#16]](https://github.com/automaticdai/rpi-obj
 **Q3: Does this support Raspberry Pi 5?**  
 A3: This is not officially tested (as I haven't received my Pi 5 yet) but it should work out of the box.
 
-**Q4: Can we run this project on Ubuntu server 22.04?**  
+**Q4: Can we run this project on Ubuntu server 22.04/24.04?**  
 A4: It is not officially tested but you should be able to run 99% of the things here.
 
 **Q5: I am using virtual environment and get a message "no module called libcamera" issue**  

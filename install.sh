@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo "Welcome to use Raspberry Pi Real-Time Obeject Detection and Tracking"
+echo "For more information: https://github.com/automaticdai/rpi-object-detection"
+
 is_raspberry_pi() {
     if grep -q "Raspberry" /proc/cpuinfo || grep -q "BCM" /proc/cpuinfo; then
         return 0  # Is raspberry Pi
@@ -43,18 +46,17 @@ else
         sudo apt-get install -y python3-pip
     fi
 
-    if ! command -v virtualenv &> /dev/null; then
-        echo "virtualenv not found. Installing virtualenv..."
-        pip3 install virtualenv
-    fi
+    echo "Installing python3-venv"
+    sudo apt install -y python3-venv
 
     echo "Creating a virtual environment..."
-    virtualenv venv
+    python3 -m venv venv
 
     echo "Activating virtual environment..."
     source venv/bin/activate
 
     echo "Installing dependencies: Pillow, numpy, scipy, matplotlib, opencv-python, and opencv-contrib-python..."
+    pip install --upgrade pip setuptools
     pip install Pillow numpy scipy matplotlib opencv-python opencv-contrib-python ultralytics
 
     if [ -f requirements.txt ]; then

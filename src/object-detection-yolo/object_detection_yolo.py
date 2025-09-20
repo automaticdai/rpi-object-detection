@@ -1,4 +1,18 @@
+# ------------------------------------------------------------------------------
+# rpi-object-detection
+# ------------------------------------------------------------------------------
 # Use Ultralytics YOLO to detect objects in a video stream
+# ------------------------------------------------------------------------------
+# automaticdai
+# YF Robotics Labrotary
+# Instagram: yfrobotics
+# Twitter: @yfrobotics
+# Website: https://yfrobotics.github.io/
+# ------------------------------------------------------------------------------
+# Referecens:
+# - https://docs.ultralytics.com/guides/raspberry-pi/
+# ------------------------------------------------------------------------------
+
 import cv2
 from ultralytics import YOLO
 

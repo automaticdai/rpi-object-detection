@@ -1,7 +1,3 @@
-contourpy
-cycler
-fonttools
-kiwisolver
 matplotlib
 numpy
 opencv-contrib-python
