@@ -53,9 +53,10 @@ This project is dependent on the following packages:
   - Different boards will have very varied performances.
   - RPi 3/4/5 are preferable as they have more powerful CPUs;
   - RPi 1/2 may be struggling and produce very low FPS, in which case you can further reduce the camera resolution (160 x 120).
-- Nvidia Jetson 
+- Nvidia Jetson
   - Jetson Nano (A01) also passed the test.
   - Jetson Orin Nano should work as well.
+  - Jetson has its own repo now: [jetson-object-detection](https://github.com/automaticdai/jetson-object-detection)
 - Any USB camera supported by Raspberry Pi
   - To see a list of all supportive cameras, visit http://elinux.org/RPi_USB_Webcams
 - The official RPi camera module is supported through `Picamera2`.
@@ -156,7 +157,7 @@ Changing the resolution will significantly impact the FPS. By default it is set 
 
 ## 5. Q&A
 **Q1: Does this support Nvidia Jetson?**  
-A1: Yes. I have tested with my Jetson Nano 4GB.
+A1: Yes. I have tested with my Jetson Nano 4GB. Note that Jetson has its own repo now: [jetson-object-detection](https://github.com/automaticdai/jetson-object-detection).
 
 **Q2: Does this support the Raspberry Pi camera?**  
 A2: This is implemented in [issue [#16]](https://github.com/automaticdai/rpi-object-detection/pull/16).
