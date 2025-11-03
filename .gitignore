@@ -59,3 +59,23 @@ target/
 
 # venv
 venv/
+.venv/
+
+# YOLO model files (downloaded at runtime)
+*.pt
+*.onnx
+*.tflite
+*.engine
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+
+# Test outputs
+test_output/
+*.jpg
+*.png
+*.mp4
+*.avi

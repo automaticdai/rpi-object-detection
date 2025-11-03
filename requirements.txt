@@ -5,6 +5,7 @@ opencv-python
 packaging
 pillow
 pyparsing
+pyttsx3
 python-dateutil
 scipy
 six
