@@ -72,7 +72,7 @@ Currently, the following applications are implemented:
 - `src/object-tracking-feature`: Object detection & tracking based on features using ORB
 - `src/face-detection`: Face detection & tracking
 - `src/object-detection-yolo`: Object detection using YOLO (RPi 3/4/5 only)
-- (*Todo*) Object detection using Neural Network (TensorFlow Lite)
+- `src/object-detection-tflite`: Object detection using TensorFlow Lite (RPi 3/4/5 only)
 
 
 ### 3.1. Camera Test
@@ -111,8 +111,25 @@ Use YOLO (You Only Look Once) for object detection.
 Note this code is based on Ultralytics YOLO. The instruction can be found at their website: [Quick Start Guide: Raspberry Pi with Ultralytics YOLO11](https://docs.ultralytics.com/guides/raspberry-pi/). Double check if you need to use it in a commercialised project! 
 
 ### 3.8. Object Detection using Neural Network (TensorFlow Lite)
-(ongoing) Use TensorFlow Lite to recognise objects.
+Use TensorFlow Lite to recognise objects.
 
+To use it, download the model and labels into the module directory:
+```
+cd src/object-detection-tflite
+
+# COCO labels
+wget https://raw.githubusercontent.com/google-coral/test_data/master/coco_labels.txt
+
+# EfficientDet-Lite0 model (INT8 quantized, ~4MB)
+wget https://storage.googleapis.com/mediapipemodels/object_detector/efficientdet_lite0/int8/1/efficientdet_lite0.tflite
+```
+
+Then install the TensorFlow Lite runtime and run:
+
+```
+pip install tflite-runtime
+python3 src/object-detection-tflite/object_detection_tflite.py
+```
 
 ## 4. How to Run
 ### 4.1. Install the environment on Raspberry Pi
@@ -156,20 +173,20 @@ Changing the resolution will significantly impact the FPS. By default it is set 
 
 
 ## 5. Q&A
-**Q1: Does this support Nvidia Jetson?**  
-A1: Yes. I have tested with my Jetson Nano 4GB. Note that Jetson has its own repo now: [jetson-object-detection](https://github.com/automaticdai/jetson-object-detection).
+**Q: Does this support Nvidia Jetson?**  
+A: Yes. I have tested with my Jetson Nano 4GB. Note that Jetson has its own repo now: [jetson-object-detection](https://github.com/automaticdai/jetson-object-detection).
 
-**Q2: Does this support the Raspberry Pi camera?**  
-A2: This is implemented in [issue [#16]](https://github.com/automaticdai/rpi-object-detection/pull/16).
+**Q: Does this support the Raspberry Pi camera?**  
+A: This is implemented in [issue [#16]](https://github.com/automaticdai/rpi-object-detection/pull/16).
 
-**Q3: Does this support Raspberry Pi 5?**  
-A3: This is not officially tested (as I haven't received my Pi 5 yet) but it should work out of the box.
+**Q: Does this support Raspberry Pi 5?**  
+A: This is not officially tested (as I haven't received my Pi 5 yet) but it should work out of the box.
 
-**Q4: Can we run this project on Ubuntu server 22.04/24.04?**  
+**Q: Can we run this project on Ubuntu server 22.04/24.04?**  
 A4: It is not officially tested but you should be able to run 99% of the things here.
 
-**Q5: I am using virtual environment and get a message "no module called libcamera" issue**  
-A5: A simple solution would be [(Reference)](https://forums.raspberrypi.com/viewtopic.php?t=361758):  
+**Q: I am using virtual environment and get a message "no module called libcamera" issue**  
+A: A simple solution would be [(Reference)](https://forums.raspberrypi.com/viewtopic.php?t=361758):  
 `python3 -m venv --system-site-packages env`
 
 Thanks [VgerTest](https://github.com/VgerTest) for [issue [#20]](https://github.com/automaticdai/rpi-object-detection/issues/20).
