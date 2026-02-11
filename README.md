@@ -174,5 +174,9 @@ A5: A simple solution would be [(Reference)](https://forums.raspberrypi.com/view
 
 Thanks [VgerTest](https://github.com/VgerTest) for [issue [#20]](https://github.com/automaticdai/rpi-object-detection/issues/20).
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=automaticdai/rpi-object-detection&type=date&legend=top-left)](https://www.star-history.com/#automaticdai/rpi-object-detection&type=date&legend=top-left)
+
 ## License
 © This source code is licensed under the [MIT License](LICENSE).
