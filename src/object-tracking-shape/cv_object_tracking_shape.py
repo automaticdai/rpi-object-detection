@@ -1,7 +1,9 @@
 # ------------------------------------------------------------------------------
 # rpi-object-detection
 # ------------------------------------------------------------------------------
-# Find geometric shaped objects in the image using houghCircles().
+# Detect and track geometric shapes in the camera frame:
+#   - Circles via cv2.HoughCircles()
+#   - Triangles and rectangles via cv2.findContours() + cv2.approxPolyDP()
 # ------------------------------------------------------------------------------
 # automaticdai
 # YF Robotics Laboratory
@@ -29,6 +31,19 @@ IMAGE_WIDTH = 320
 IMAGE_HEIGHT = 240
 IS_RASPI_CAMERA = is_raspberry_camera()
 fps = 0
+
+# Contour-based polygon detection parameters.
+MIN_CONTOUR_AREA = 500          # reject noise: contours with area below this are ignored
+POLY_APPROX_EPSILON = 0.04      # approxPolyDP epsilon as a fraction of contour perimeter
+CANNY_LOW = 50
+CANNY_HIGH = 150
+
+# BGR colors for each shape label.
+SHAPE_COLORS = {
+    "Triangle":  (0, 255, 255),   # yellow
+    "Rectangle": (255, 0, 255),   # magenta
+}
+
 print("Using raspi camera: ", IS_RASPI_CAMERA)
 
 def isset(v):
@@ -92,19 +107,39 @@ if __name__ == "__main__":
             output = frame.copy()
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-            # detect circles in the image
+            # --- Circles via HoughCircles ---
             circles = cv2.HoughCircles(gray, cv2.HOUGH_GRADIENT, 1.2, 100)
-
-            # ensure at least some circles were found
             if circles is not None:
-                # convert the (x, y) coordinates and radius of the circles to integers
                 circles = np.round(circles[0, :]).astype("int")
-                # loop over the (x, y) coordinates and radius of the circles
                 for (x, y, r) in circles:
-                    # draw the circle in the output image, then draw a rectangle
-                    # corresponding to the center of the circle
                     cv2.circle(output, (x, y), r, (0, 255, 0), 4)
                     cv2.rectangle(output, (x - 5, y - 5), (x + 5, y + 5), (0, 128, 255), -1)
+                    cv2.putText(output, "Circle", (x - 20, y - r - 8),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+
+            # --- Triangles & rectangles via contour polygon approximation ---
+            edges = cv2.Canny(gray, CANNY_LOW, CANNY_HIGH)
+            contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            for cnt in contours:
+                if cv2.contourArea(cnt) < MIN_CONTOUR_AREA:
+                    continue
+                perimeter = cv2.arcLength(cnt, True)
+                approx = cv2.approxPolyDP(cnt, POLY_APPROX_EPSILON * perimeter, True)
+                vertices = len(approx)
+                if vertices == 3:
+                    label = "Triangle"
+                elif vertices == 4:
+                    label = "Rectangle"
+                else:
+                    continue
+                color = SHAPE_COLORS[label]
+                cv2.drawContours(output, [approx], -1, color, 2)
+                m = cv2.moments(cnt)
+                if m["m00"] != 0:
+                    cx = int(m["m10"] / m["m00"])
+                    cy = int(m["m01"] / m["m00"])
+                    cv2.putText(output, label, (cx - 25, cy),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
             # show the output image
             cv2.imshow('img', np.hstack([frame, output]))

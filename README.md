@@ -91,8 +91,12 @@ Track an object based on its color in HSV and print its center position. You can
 ![alt text](./images/cv_object_tracking_color.png)
 
 ### 3.4. Shape-based Object Detection and Tracking
-Detect and track round objects using HoughCircles().
-Support of squares is coming soon.
+Detect and track geometric shapes in the frame:
+
+- **Circles** via `cv2.HoughCircles()`
+- **Triangles** and **rectangles** via contour approximation (`cv2.findContours()` + `cv2.approxPolyDP()`)
+
+Contours below `MIN_CONTOUR_AREA` pixels are filtered out to reduce noise; the epsilon used for polygon approximation and the Canny edge thresholds are configurable at the top of the script.
 
 ![alt text](./images/cv_object_tracking_shape.png)
 
