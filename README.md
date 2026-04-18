@@ -81,7 +81,9 @@ Test the RPi and OpenCV environment. You are expected to see a pop-up window tha
 ![alt text](./images/cv_camera_test.png)
 
 ### 3.2. Motion Detection
-Detect object movements in the image and print a warning message if any movement is detected. This detection is based on the mean squared error (MSE) of the difference between two images.
+Detect object movements in the camera frame and print a warning message when motion is sustained.
+
+Pipeline: the current and previous frames are converted to grayscale, Gaussian-blurred to suppress sensor noise, then compared with a per-pixel `cv2.absdiff`. The resulting diff is thresholded, dilated, and passed through `cv2.findContours`; only connected regions with area ≥ `MIN_MOTION_AREA` count as motion, and a debounce (`MOTION_CONSECUTIVE_FRAMES`) rejects one-frame transients. All thresholds are constants at the top of the script, so you can trade sensitivity for false-positive rate without touching the loop.
 
 ![alt text](./images/cv_motion_detection.png)
 
