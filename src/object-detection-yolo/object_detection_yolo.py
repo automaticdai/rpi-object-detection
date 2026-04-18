@@ -4,7 +4,7 @@
 # Use Ultralytics YOLO to detect objects in a video stream
 # ------------------------------------------------------------------------------
 # automaticdai
-# YF Robotics Labrotary
+# YF Robotics Laboratory
 # Instagram: yfrobotics
 # Twitter: @yfrobotics
 # Website: https://yfrobotics.github.io/

@@ -5,7 +5,7 @@
 # Supports EfficientDet-Lite and SSD MobileNet models with COCO labels
 # ------------------------------------------------------------------------------
 # automaticdai
-# YF Robotics Labrotary
+# YF Robotics Laboratory
 # Instagram: yfrobotics
 # Twitter: @yfrobotics
 # Website: https://yfrobotics.github.io/
@@ -180,8 +180,6 @@ if __name__ == "__main__":
             # ESC to exit
             if cv2.waitKey(1) == 27:
                 break
-    except Exception as e:
-        print(e)
     finally:
         cv2.destroyAllWindows()
         cap.close() if IS_RASPI_CAMERA else cap.release()

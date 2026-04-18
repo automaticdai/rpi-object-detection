@@ -2,7 +2,7 @@
 # rpi-object-detection
 # ------------------------------------------------------------------------------
 # automaticdai
-# YF Robotics Labrotary
+# YF Robotics Laboratory
 # Instagram: yfrobotics
 # Twitter: @yfrobotics
 # Website: https://yfrobotics.github.io/

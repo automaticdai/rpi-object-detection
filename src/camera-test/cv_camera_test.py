@@ -5,7 +5,7 @@
 # if OpenCV has been properly installed.
 # ------------------------------------------------------------------------------
 # automaticdai
-# YF Robotics Labrotary
+# YF Robotics Laboratory
 # Instagram: yfrobotics
 # Twitter: @yfrobotics
 # Website: https://yfrobotics.github.io/
@@ -89,8 +89,6 @@ if __name__ == "__main__":
             # if key pressed is 'Esc' then exit the loop
             if cv2.waitKey(33) == 27:
                 break
-    except Exception as e:
-        print(e)
     finally:
         # Clean up and exit the program
         cv2.destroyAllWindows()

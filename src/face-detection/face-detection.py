@@ -2,7 +2,7 @@
 # rpi-object-detection
 # ------------------------------------------------------------------------------
 # automaticdai
-# YF Robotics Labrotary
+# YF Robotics Laboratory
 # Instagram: yfrobotics
 # Twitter: @yfrobotics
 # Website: https://yfrobotics.github.io/
@@ -27,7 +27,6 @@ IMAGE_WIDTH = 320
 IMAGE_HEIGHT = 240
 IS_RASPI_CAMERA = is_raspberry_camera()
 fps = 0
-base_dir = os.path.dirname(os.path.abspath(__file__))
 
 print("Using raspi camera: ", IS_RASPI_CAMERA)
 
@@ -52,7 +51,7 @@ def visualize_fps(image, fps: int):
 
 
 # Load the cascade
-face_cascade = cv2.CascadeClassifier(os.path.join(base_dir, 'haarcascade_frontalface_default.xml'))
+face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
 # To capture video from webcam.
 if IS_RASPI_CAMERA:
