@@ -1,70 +1,52 @@
 #!/bin/bash
+# ------------------------------------------------------------------------------
+# rpi-object-detection: install script
+#
+# Creates a Python virtual environment in ./venv and installs the dependencies
+# listed in requirements.txt.
+#
+# On Raspberry Pi, the venv is created with --system-site-packages so that
+# libcamera and picamera2 (installed in the system Python by Raspberry Pi OS)
+# remain accessible from inside the venv.
+# ------------------------------------------------------------------------------
+set -e
 
-echo "Welcome to use Raspberry Pi Real-Time Obeject Detection and Tracking"
+echo "Welcome to Raspberry Pi Real-Time Object Detection and Tracking"
 echo "For more information: https://github.com/automaticdai/rpi-object-detection"
 
 is_raspberry_pi() {
-    if grep -q "Raspberry" /proc/cpuinfo || grep -q "BCM" /proc/cpuinfo; then
-        return 0  # Is raspberry Pi
-    else
-        return 1
-    fi
+    grep -qE "Raspberry|BCM" /proc/cpuinfo
 }
 
+echo "Updating package list..."
+sudo apt-get update
+
+echo "Installing system dependencies (libopencv-dev, libatlas-base-dev, python3-venv, python3-pip)..."
+sudo apt-get install -y libopencv-dev libatlas-base-dev python3-venv python3-pip
+
 if is_raspberry_pi; then
-    echo "Raspberry Pi detected. Running Raspberry-specific script..."
-
-    echo "Update packages"
-    sudo apt-get update
-
-    echo "Installing libopencv-dev and libatlas-base-dev..."
-    sudo apt-get install -y libopencv-dev libatlas-base-dev
-
-    if ! command -v pip3 &> /dev/null; then
-        echo "pip3 not found. Installing pip3..."
-        sudo apt-get install -y python3-pip
-    fi
-
-    echo "Installing Pillow, numpy, scipy, matplotlib..."
-    pip3 install Pillow numpy scipy matplotlib
-
-    echo "Installing opencv-python and opencv-contrib-python..."
-    pip3 install opencv-python opencv-contrib-python ultralytics
-
-    echo "Installation of dependencies completed for Raspberry Pi!"
+    echo "Raspberry Pi detected."
+    VENV_ARGS="--system-site-packages"
 else
-    echo "Non-Raspberry Pi system detected. Running standard script..."
-
-    echo "Updating package list..."
-    sudo apt-get update
-
-    echo "Installing libopencv-dev and libatlas-base-dev..."
-    sudo apt-get install -y libopencv-dev libatlas-base-dev
-
-    if ! command -v pip3 &> /dev/null; then
-        echo "pip3 not found. Installing pip3..."
-        sudo apt-get install -y python3-pip
-    fi
-
-    echo "Installing python3-venv"
-    sudo apt install -y python3-venv
-
-    echo "Creating a virtual environment..."
-    python3 -m venv venv
-
-    echo "Activating virtual environment..."
-    source venv/bin/activate
-
-    echo "Installing dependencies: Pillow, numpy, scipy, matplotlib, opencv-python, and opencv-contrib-python..."
-    pip install --upgrade pip setuptools
-    pip install Pillow numpy scipy matplotlib opencv-python opencv-contrib-python ultralytics
-
-    if [ -f requirements.txt ]; then
-        echo "Installing dependencies from requirements.txt..."
-        pip install -r requirements.txt
-    else
-        echo "requirements.txt not found. Skipping installation from requirements file."
-    fi
-
-    echo "Installation of dependencies completed for non-Raspberry Pi system!"
+    echo "Non-Raspberry Pi system detected."
+    VENV_ARGS=""
 fi
+
+if [ ! -d venv ]; then
+    echo "Creating virtual environment in ./venv ..."
+    python3 -m venv ${VENV_ARGS} venv
+else
+    echo "Virtual environment ./venv already exists — reusing it."
+fi
+
+echo "Upgrading pip tooling..."
+./venv/bin/pip install --upgrade pip setuptools wheel
+
+echo "Installing Python dependencies from requirements.txt ..."
+./venv/bin/pip install -r requirements.txt
+
+echo ""
+echo "Installation complete."
+echo ""
+echo "To activate the virtual environment in your shell, run:"
+echo "    source venv/bin/activate"
