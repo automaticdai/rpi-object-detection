@@ -16,12 +16,12 @@
     + [3.4. Shape-based Object Detection and Tracking](#34-shape-based-object-detection-and-tracking)
     + [3.5. Feature-based Object Detection and Tracking (with ORB)](#35-feature-based-object-detection-and-tracking--with-orb-)
     + [3.6. Face Detection and Tracking](#36-face-detection-and-tracking)
-    + [3.7. Object Detection using Neural Network (TensorFlow Lite)](#37-object-detection-using-neural-network--tensorflow-lite-)
+    + [3.7. Object Detection using YOLO](#37-object-detection-using-yolo)
+    + [3.8. Object Detection using TensorFlow Lite](#38-object-detection-using-neural-network-tensorflow-lite)
   * [4. How to Run](#4-how-to-run)
-    + [4.1. Install the environment on Raspberry Pi](#41-install-the-environment-on-raspberry-pi)
-    + [4.2. Install TensorFlow Lite (optional; only if you want to use the neural network example)](#42-install-tensorflow-lite--optional--only-if-you-want-to-use-the-neural-network-example-)
-    + [4.3. Run the scripts](#43-run-the-scripts)
-    + [4.4. Change camera resolution](#44-change-camera-resolution)
+    + [4.1. Install the environment](#41-install-the-environment)
+    + [4.2. Run the scripts](#42-run-the-scripts)
+    + [4.3. Change camera resolution](#43-change-camera-resolution)
   * [5. Q&A](#5-q-a)
   * [License](#license)
 
@@ -86,7 +86,7 @@ Detect object movements in the image and print a warning message if any movement
 ![alt text](./images/cv_motion_detection.png)
 
 ### 3.3. Color-based Object Detection and Tracking
-Track an object based on its color in HSV and print its center position. You can choose your own color by clicking on the object of interest. Click multiple times on different points so a full color space is coveraged. You can hard code the parameters so you don't need to pick them again for the next run. The following demo shows how I track a Nintendo game controller in real-time:
+Track an object based on its color in HSV and print its center position. You can choose your own color by clicking on the object of interest. Click multiple times on different points so a full color space is covered. You can hard code the parameters so you don't need to pick them again for the next run. The following demo shows how I track a Nintendo game controller in real-time:
 
 ![alt text](./images/cv_object_tracking_color.png)
 
@@ -132,28 +132,30 @@ python3 src/object-detection-tflite/object_detection_tflite.py
 ```
 
 ## 4. How to Run
-### 4.1. Install the environment on Raspberry Pi
-```
-sudo apt-get install -y libopencv-dev libatlas-base-dev
-pip3 install virtualenv Pillow numpy scipy matplotlib opencv-python opencv-contrib-python
-```
+### 4.1. Install the environment
 
-or use the installation script:
+Run the installation script. It creates a virtual environment under `./venv` and installs all Python dependencies from `requirements.txt`:
 
 ```
 chmod +x install.sh
 ./install.sh
 ```
 
-### 4.2. Install TensorFlow Lite (optional; only if you want to use the neural network example)
+On Raspberry Pi, the venv is created with `--system-site-packages` so that `libcamera` and `picamera2` (installed in the system Python by Raspberry Pi OS) remain accessible from inside it.
+
+Activate the environment in your shell before running any of the scripts:
+
 ```
-wget https://github.com/PINTO0309/Tensorflow-bin/raw/master/tensorflow-2.1.0-cp37-cp37m-linux_armv7l.whl
-pip3 install --upgrade setuptools
-pip3 install tensorflow-2.1.0-cp37-cp37m-linux_armv7l.whl
-pip3 install -e .
+source venv/bin/activate
 ```
 
-### 4.3. Run the scripts
+The TensorFlow Lite example (§3.8) has an extra optional dependency — install it into the same venv only if you plan to use it:
+
+```
+pip install tflite-runtime
+```
+
+### 4.2. Run the scripts
 Run scripts in the `/src` folder by:
 
 ```
@@ -162,7 +164,7 @@ python3 src/$FOLDER_NAME$/$SCRIPT_NAME$.py
 
 To stop the code, press the `ESC` key on your keyboard.
 
-### 4.4. Change camera resolution
+### 4.3. Change camera resolution
 Changing the resolution will significantly impact the FPS. By default it is set to be `320 x 240`, but you can change it to any value that your camera supports at the beginning of each source code (defined by `IMAGE_WIDTH` and `IMAGE_HEIGHT`). Typical resolutions are:
 
 - 160 x 120
