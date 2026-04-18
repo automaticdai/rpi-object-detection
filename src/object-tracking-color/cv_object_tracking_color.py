@@ -23,7 +23,6 @@ import sys
 import cv2
 import time
 import numpy as np
-import time
 import math
 
 # Add src directory to the path
@@ -233,7 +232,7 @@ if __name__ == "__main__":
             # calculate FPS
             seconds = end_time - start_time
             fps = 1.0 / seconds
-            print("Estimated fps:{0:0.1f}".format(fps));
+            print("Estimated fps:{0:0.1f}".format(fps))
             # if key pressed is 'Esc' then exit the loop
             if cv2.waitKey(33) == 27:
                 break

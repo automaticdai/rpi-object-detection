@@ -18,7 +18,6 @@ import sys
 import cv2
 import time
 import numpy as np
-import time
 
 # Add src directory to the path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))

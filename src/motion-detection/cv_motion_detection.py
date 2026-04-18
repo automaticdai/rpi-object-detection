@@ -15,7 +15,6 @@ import sys
 import cv2
 import time
 import numpy as np
-import time
 
 # Add src directory to the path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -117,7 +116,7 @@ if __name__ == "__main__":
             # calculate FPS
             seconds = end_time - start_time
             fps = 1.0 / seconds
-            print("Estimated fps:{0:0.1f}".format(fps));
+            print("Estimated fps:{0:0.1f}".format(fps))
 
             cnt_frame = cnt_frame + 1
             edges_p = edges

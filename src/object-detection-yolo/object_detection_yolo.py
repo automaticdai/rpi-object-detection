@@ -9,7 +9,7 @@
 # Twitter: @yfrobotics
 # Website: https://yfrobotics.github.io/
 # ------------------------------------------------------------------------------
-# Referecens:
+# References:
 # - https://docs.ultralytics.com/guides/raspberry-pi/
 # ------------------------------------------------------------------------------
 

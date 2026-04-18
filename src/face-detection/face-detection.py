@@ -15,7 +15,6 @@ import sys
 import cv2
 import time
 import numpy as np
-import time
 
 # Add src directory to the path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -50,51 +49,52 @@ def visualize_fps(image, fps: int):
     return image
 
 
-# Load the cascade
-face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+if __name__ == "__main__":
+    try:
+        # Load the cascade
+        face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
-# To capture video from webcam.
-if IS_RASPI_CAMERA:
-    cap = get_picamera(IMAGE_WIDTH, IMAGE_HEIGHT)
-    cap.start()
-else:
-    # create video capture
-    cap = cv2.VideoCapture(CAMERA_DEVICE_ID)
-    # set resolution to 320x240 to reduce latency
-    cap.set(3, IMAGE_WIDTH)
-    cap.set(4, IMAGE_HEIGHT)
-# To use a video file as input
-# cap = cv2.VideoCapture('filename.mp4')
+        # To capture video from webcam.
+        if IS_RASPI_CAMERA:
+            cap = get_picamera(IMAGE_WIDTH, IMAGE_HEIGHT)
+            cap.start()
+        else:
+            # create video capture
+            cap = cv2.VideoCapture(CAMERA_DEVICE_ID)
+            # set resolution to 320x240 to reduce latency
+            cap.set(3, IMAGE_WIDTH)
+            cap.set(4, IMAGE_HEIGHT)
 
-while True:
-    # ----------------------------------------------------------------------
-    # record start time
-    start_time = time.time()
-    # Read the frames from a camera
-    if IS_RASPI_CAMERA:
-        frame = cap.capture_array()
-    else:
-        _, frame = cap.read()
-    # Convert to grayscale
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    # Detect the faces
-    faces = face_cascade.detectMultiScale(gray, 1.1, 4)
-    # Draw the rectangle around each face
-    for (x, y, w, h) in faces:
-        cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
-    # Display
-    cv2.imshow('img', visualize_fps(frame, fps))
-    # ----------------------------------------------------------------------
-    # record end time
-    end_time = time.time()
-    # calculate FPS
-    seconds = end_time - start_time
-    fps = 1.0 / seconds
-    print("Estimated fps:{0:0.1f}".format(fps))
-    # Stop if escape key is pressed
-    k = cv2.waitKey(30) & 0xff
-    if k==27:
-        break
-
-# Release the VideoCapture object
-cap.close() if IS_RASPI_CAMERA else cap.release()
+        while True:
+            # ----------------------------------------------------------------------
+            # record start time
+            start_time = time.time()
+            # Read the frames from a camera
+            if IS_RASPI_CAMERA:
+                frame = cap.capture_array()
+            else:
+                _, frame = cap.read()
+            # Convert to grayscale
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            # Detect the faces
+            faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+            # Draw the rectangle around each face
+            for (x, y, w, h) in faces:
+                cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
+            # Display
+            cv2.imshow('img', visualize_fps(frame, fps))
+            # ----------------------------------------------------------------------
+            # record end time
+            end_time = time.time()
+            # calculate FPS
+            seconds = end_time - start_time
+            fps = 1.0 / seconds
+            print("Estimated fps:{0:0.1f}".format(fps))
+            # Stop if escape key is pressed
+            k = cv2.waitKey(30) & 0xff
+            if k == 27:
+                break
+    finally:
+        # Clean up and exit the program
+        cv2.destroyAllWindows()
+        cap.close() if IS_RASPI_CAMERA else cap.release()
