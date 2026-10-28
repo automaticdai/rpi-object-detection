@@ -15,6 +15,13 @@
 import cv2
 import numpy as np
 import time
+import os
+import sys
+
+# Add src directory to the path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from utils.camera_utils import open_camera
 
 def ORB_detector(new_image, image_template):
     # Function that compares input image to template
@@ -66,7 +73,7 @@ if __name__ == "__main__":
     try:
         fps = 0
 
-        cap = cv2.VideoCapture(0)
+        cap = open_camera(0, 640, 480)
 
         # Load our image template, this is our reference image
         image_template = cv2.imread('simple.png', 0)
