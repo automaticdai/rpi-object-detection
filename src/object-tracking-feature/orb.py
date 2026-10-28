@@ -15,6 +15,13 @@
 import cv2
 import numpy as np
 import time
+import os
+import sys
+
+# Add src directory to the path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from utils.camera_utils import open_camera
 
 def ORB_detector(new_image, image_template):
     # Function that compares input image to template
@@ -66,15 +73,14 @@ if __name__ == "__main__":
     try:
         fps = 0
 
-        cap = cv2.VideoCapture(0)
+        cap = open_camera(0, 640, 480)
 
         # Load our image template, this is our reference image
         image_template = cv2.imread('simple.png', 0)
 
+        prev_time = time.time()
         while True:
             # ----------------------------------------------------------------------
-            # record start time
-            start_time = time.time()
             # Get webcam images
             ret, frame = cap.read()
 
@@ -117,8 +123,10 @@ if __name__ == "__main__":
             # ----------------------------------------------------------------------
             # record end time
             end_time = time.time()
-            # calculate FPS
-            seconds = end_time - start_time
+            # calculate FPS from the time between consecutive frames, so it
+            # includes waiting for the camera and waitKey(), not just processing
+            seconds = end_time - prev_time
+            prev_time = end_time
             fps = 1.0 / seconds
             print("Estimated fps:{0:0.1f}".format(fps))
             if cv2.waitKey(1) == 13: #13 is the Enter Key

@@ -29,6 +29,7 @@ import math
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from utils.picamera_utils import is_raspberry_camera, get_picamera
+from utils.camera_utils import open_camera
 
 CAMERA_DEVICE_ID = 0
 IMAGE_WIDTH = 320
@@ -150,15 +151,14 @@ if __name__ == "__main__":
             cap.start()
         else:
             # create video capture
-            cap = cv2.VideoCapture(CAMERA_DEVICE_ID)
+            cap = open_camera(CAMERA_DEVICE_ID, IMAGE_WIDTH, IMAGE_HEIGHT)
             # set resolution to 320x240 to reduce latency
             cap.set(3, IMAGE_WIDTH)
             cap.set(4, IMAGE_HEIGHT)
 
+        prev_time = time.time()
         while True:
             # ----------------------------------------------------------------------
-            # record start time
-            start_time = time.time()
             # Read the frames frome a camera
             if IS_RASPI_CAMERA:
                 frame = cap.capture_array()
@@ -229,8 +229,10 @@ if __name__ == "__main__":
             # ----------------------------------------------------------------------
             # record end time
             end_time = time.time()
-            # calculate FPS
-            seconds = end_time - start_time
+            # calculate FPS from the time between consecutive frames, so it
+            # includes waiting for the camera and waitKey(), not just processing
+            seconds = end_time - prev_time
+            prev_time = end_time
             fps = 1.0 / seconds
             print("Estimated fps:{0:0.1f}".format(fps))
             # if key pressed is 'Esc' then exit the loop

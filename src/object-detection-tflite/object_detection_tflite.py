@@ -25,6 +25,7 @@ import numpy as np
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from utils.picamera_utils import is_raspberry_camera, get_picamera
+from utils.camera_utils import open_camera
 
 # Flexible import: try tflite-runtime first, then ai-edge-litert, then full TF
 try:
@@ -111,13 +112,12 @@ if __name__ == "__main__":
             cap = get_picamera(IMAGE_WIDTH, IMAGE_HEIGHT)
             cap.start()
         else:
-            cap = cv2.VideoCapture(CAMERA_DEVICE_ID)
+            cap = open_camera(CAMERA_DEVICE_ID, IMAGE_WIDTH, IMAGE_HEIGHT)
             cap.set(3, IMAGE_WIDTH)
             cap.set(4, IMAGE_HEIGHT)
 
+        prev_time = time.time()
         while True:
-            # Record start time
-            start_time = time.time()
 
             # Read frame
             if IS_RASPI_CAMERA:
@@ -171,7 +171,8 @@ if __name__ == "__main__":
 
             # Calculate FPS
             end_time = time.time()
-            seconds = end_time - start_time
+            seconds = end_time - prev_time
+            prev_time = end_time
             fps = 1.0 / seconds
             print("Frame{}: Estimated fps:{:.1f}".format(cnt_frame, fps))
 
