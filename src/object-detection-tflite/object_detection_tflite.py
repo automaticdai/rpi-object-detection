@@ -116,9 +116,8 @@ if __name__ == "__main__":
             cap.set(3, IMAGE_WIDTH)
             cap.set(4, IMAGE_HEIGHT)
 
+        prev_time = time.time()
         while True:
-            # Record start time
-            start_time = time.time()
 
             # Read frame
             if IS_RASPI_CAMERA:
@@ -172,7 +171,8 @@ if __name__ == "__main__":
 
             # Calculate FPS
             end_time = time.time()
-            seconds = end_time - start_time
+            seconds = end_time - prev_time
+            prev_time = end_time
             fps = 1.0 / seconds
             print("Frame{}: Estimated fps:{:.1f}".format(cnt_frame, fps))
 
