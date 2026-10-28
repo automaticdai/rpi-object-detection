@@ -9,6 +9,7 @@
   * [2. Dependency](#2-dependency)
     + [2.1. Packages requirement](#21-packages-requirement)
     + [2.2. Hardware support](#22-hardware-support)
+    + [2.3. Camera support](#23-camera-support)
   * [3. What's in this repository](#3-what-s-in-this-repository)
     + [3.1. Camera Test](#31-camera-test)
     + [3.2. Motion Detection](#32-motion-detection)
@@ -57,9 +58,15 @@ This project is dependent on the following packages:
   - Jetson Nano (A01) also passed the test.
   - Jetson Orin Nano should work as well.
   - Jetson has its own repo now: [jetson-object-detection](https://github.com/automaticdai/jetson-object-detection)
+
+### 2.3. Camera support
 - Any USB camera supported by Raspberry Pi
   - To see a list of all supportive cameras, visit http://elinux.org/RPi_USB_Webcams
 - The official RPi camera module is supported through `Picamera2`.
+- CSI cameras on Nvidia Jetson (e.g. Raspberry Pi Camera Module v2 / IMX219 on Jetson Nano) are supported through GStreamer.
+  - On Jetson, CSI cameras output raw Bayer frames through V4L2, so OpenCV cannot read them with a plain `cv2.VideoCapture(0)`. The scripts detect a Jetson CSI camera automatically and open it with an `nvarguscamerasrc` GStreamer pipeline instead (see `src/utils/camera_utils.py`). USB cameras on Jetson still use V4L2.
+  - This needs the OpenCV that ships with JetPack, which is built with GStreamer. Do **not** `pip install opencv-python` on Jetson: the pip wheels have no GStreamer support and will shadow JetPack's OpenCV.
+  - If the camera fails to open (e.g. `Failed to create CaptureSession`), restart the camera daemon: `sudo systemctl restart nvargus-daemon`.
 
 
 ## 3. What's in this repository
