@@ -10,6 +10,7 @@
     + [2.1. Packages requirement](#21-packages-requirement)
     + [2.2. Hardware support](#22-hardware-support)
     + [2.3. Camera support](#23-camera-support)
+    + [2.4. Tested platforms](#24-tested-platforms)
   * [3. What's in this repository](#3-what-s-in-this-repository)
     + [3.1. Camera Test](#31-camera-test)
     + [3.2. Motion Detection](#32-motion-detection)
@@ -41,16 +42,19 @@ Note the code is based on Python and OpenCV meaning it is cross-platform. You ca
 ## 2. Dependency
 ### 2.1. Packages requirement
 This project is dependent on the following packages:
-- Python >= 3.6.9
+- Python >= 3.6.9 (tested with Python 3.12 and 3.13)
 - OpenCV-Python
 - OpenCV-Contrib-Python
 - NumPy
 - SciPy
 - Matplotlib
-- Ultralytics
+- Ultralytics (with CPU-only PyTorch on Raspberry Pi)
+- `ai-edge-litert` (optional, for the TensorFlow Lite example)
 
 ### 2.2. Hardware support
 - Support Raspberry Pi 1 Model B, Raspberry Pi 2, Raspberry Pi Zero, and Raspberry Pi 3/4/5 (preferable)
+  - Raspberry Pi 5 and Raspberry Pi 4 have been tested (on Compute Module 5 and Compute Module 4), see [2.4. Tested platforms](#24-tested-platforms).
+  - Both Raspberry Pi OS and Ubuntu are supported.
   - Different boards will have very varied performances.
   - RPi 3/4/5 are preferable as they have more powerful CPUs;
   - RPi 1/2 may be struggling and produce very low FPS, in which case you can further reduce the camera resolution (160 x 120).
@@ -63,10 +67,36 @@ This project is dependent on the following packages:
 - Any USB camera supported by Raspberry Pi
   - To see a list of all supportive cameras, visit http://elinux.org/RPi_USB_Webcams
 - The official RPi camera module is supported through `Picamera2`.
+  - All scripts use `Picamera2` automatically when it is installed (`sudo apt install python3-picamera2` on Raspberry Pi OS), and fall back to a USB camera otherwise.
+  - On a Compute Module, the camera has to be declared in `/boot/firmware/config.txt`. For example, for a Camera Module v2 (IMX219) on the `CAM1` connector, set `camera_auto_detect=0` and add `dtoverlay=imx219,cam1`, then reboot. Use `ov5647` for Camera Module v1, `imx708` for v3, and `imx477` for the HQ camera. Run `rpicam-hello --list-cameras` to check that the camera is detected.
+  - On Ubuntu, `python3-picamera2` is not available from the Ubuntu archive, so use a USB camera.
 - CSI cameras on Nvidia Jetson (e.g. Raspberry Pi Camera Module v2 / IMX219 on Jetson Nano) are supported through GStreamer.
   - On Jetson, CSI cameras output raw Bayer frames through V4L2, so OpenCV cannot read them with a plain `cv2.VideoCapture(0)`. The scripts detect a Jetson CSI camera automatically and open it with an `nvarguscamerasrc` GStreamer pipeline instead (see `src/utils/camera_utils.py`). USB cameras on Jetson still use V4L2.
   - This needs the OpenCV that ships with JetPack, which is built with GStreamer. Do **not** `pip install opencv-python` on Jetson: the pip wheels have no GStreamer support and will shadow JetPack's OpenCV.
   - If the camera fails to open (e.g. `Failed to create CaptureSession`), restart the camera daemon: `sudo systemctl restart nvargus-daemon`.
+
+### 2.4. Tested platforms
+All eight examples have been tested on the following setups:
+
+| Board | OS | Python | Camera |
+|---|---|---|---|
+| Raspberry Pi Compute Module 5 (RPi 5) | Ubuntu 24.04 LTS | 3.12 | Sony PlayStation Eye (USB) |
+| Raspberry Pi Compute Module 4 (RPi 4) | Raspberry Pi OS (Debian 13 trixie) | 3.13 | Camera Module v2.1 (IMX219) on `CAM1` |
+
+Measured frame rates (OpenCV 5.0):
+
+| Example | RPi 5 (CM5) | RPi 4 (CM4) |
+|---|---|---|
+| Camera Test | 30 FPS | 29 FPS |
+| Motion Detection | 30 FPS | 20 FPS |
+| Color-based Tracking | 29 FPS | 27 FPS |
+| Shape-based Tracking | 28 FPS | 23 FPS |
+| Feature-based Tracking (ORB) | 30 FPS | 20 FPS |
+| Face Detection | 25 FPS | 20 FPS |
+| TensorFlow Lite (EfficientDet-Lite0) | 30 FPS | 11 FPS |
+| YOLO11n (Ultralytics, 640x480) | 2.2 FPS | 0.9 FPS |
+
+The PlayStation Eye on the RPi 5 is limited to 30 FPS, so results at 30 FPS are capped by the camera rather than by the CPU.
 
 
 ## 3. What's in this repository
@@ -154,7 +184,9 @@ chmod +x install.sh
 ./install.sh
 ```
 
-On Raspberry Pi, the venv is created with `--system-site-packages` so that `libcamera` and `picamera2` (installed in the system Python by Raspberry Pi OS) remain accessible from inside it.
+On Raspberry Pi, the venv is created with `--system-site-packages` so that `libcamera` and `picamera2` (installed in the system Python by Raspberry Pi OS) remain accessible from inside it. The script also installs the CPU-only build of PyTorch first, because the default PyPI build for ARM64 pulls in several GB of CUDA packages that a Raspberry Pi cannot use.
+
+The face detection example uses the Haar cascade files from the `libopencv-dev` system package (installed by `install.sh`), since the OpenCV 5 pip wheels no longer ship them.
 
 Activate the environment in your shell before running any of the scripts:
 
@@ -195,10 +227,10 @@ A: Yes. I have tested with my Jetson Nano 4GB. Note that Jetson has its own repo
 A: This is implemented in [issue [#16]](https://github.com/automaticdai/rpi-object-detection/pull/16).
 
 **Q: Does this support Raspberry Pi 5?**  
-A: This is not officially tested (as I haven't received my Pi 5 yet) but it should work out of the box.
+A: Yes. All examples have been tested on a Raspberry Pi Compute Module 5, which uses the same processor as the Raspberry Pi 5. See [2.4. Tested platforms](#24-tested-platforms).
 
-**Q: Can we run this project on Ubuntu server 22.04/24.04?**  
-A4: It is not officially tested but you should be able to run 99% of the things here.
+**Q: Can we run this project on Ubuntu?**  
+A: Yes. All examples have been tested on Ubuntu 24.04 LTS on a Raspberry Pi Compute Module 5 with a USB camera. `picamera2` is not available from the Ubuntu archive, so use a USB camera on Ubuntu.
 
 **Q: I am using virtual environment and get a message "no module called libcamera" issue**  
 A: A simple solution would be [(Reference)](https://forums.raspberrypi.com/viewtopic.php?t=361758):  
