@@ -21,8 +21,8 @@ is_raspberry_pi() {
 echo "Updating package list..."
 sudo apt-get update
 
-echo "Installing system dependencies (libopencv-dev, libatlas-base-dev, python3-venv, python3-pip)..."
-sudo apt-get install -y libopencv-dev libatlas-base-dev python3-venv python3-pip
+echo "Installing system dependencies (libopencv-dev, python3-venv, python3-pip)..."
+sudo apt-get install -y libopencv-dev python3-venv python3-pip
 
 if is_raspberry_pi; then
     echo "Raspberry Pi detected."
