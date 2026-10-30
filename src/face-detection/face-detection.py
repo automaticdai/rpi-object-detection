@@ -53,9 +53,15 @@ def visualize_fps(image, fps: int):
 if __name__ == "__main__":
     try:
         # Load the cascade
-        # JetPack's OpenCV has no cv2.data, so fall back to the system cascade directory
-        cascade_dir = cv2.data.haarcascades if hasattr(cv2, 'data') else '/usr/share/opencv4/haarcascades/'
-        face_cascade = cv2.CascadeClassifier(cascade_dir + 'haarcascade_frontalface_default.xml')
+        # JetPack's OpenCV has no cv2.data, and the OpenCV 5 pip wheels ship an
+        # empty one, so fall back to the system cascade directory
+        cascade_name = 'haarcascade_frontalface_default.xml'
+        cascade_path = '/usr/share/opencv4/haarcascades/' + cascade_name
+        if hasattr(cv2, 'data') and os.path.exists(cv2.data.haarcascades + cascade_name):
+            cascade_path = cv2.data.haarcascades + cascade_name
+        face_cascade = cv2.CascadeClassifier(cascade_path)
+        if face_cascade.empty():
+            sys.exit("Error: could not load face cascade from " + cascade_path)
 
         # To capture video from webcam.
         if IS_RASPI_CAMERA:
