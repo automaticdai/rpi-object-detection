@@ -87,7 +87,7 @@ if __name__ == "__main__":
 
     if not os.path.exists(MODEL_PATH):
         print("Error: Model file not found at", MODEL_PATH)
-        print("Download with: wget https://storage.googleapis.com/mediapipe-models/object_detector/efficientdet_lite0/int8/1/efficientdet_lite0.tflite")
+        print("Download with: wget -O efficientdet_lite0.tflite https://storage.googleapis.com/download.tensorflow.org/models/tflite/task_library/object_detection/rpi/lite-model_efficientdet_lite0_detection_metadata_1.tflite")
         sys.exit(1)
 
     labels = load_labels(LABELS_PATH)

@@ -133,14 +133,14 @@ cd src/object-detection-tflite
 # COCO labels
 wget https://raw.githubusercontent.com/google-coral/test_data/master/coco_labels.txt
 
-# EfficientDet-Lite0 model (INT8 quantized, ~4MB)
-wget https://storage.googleapis.com/mediapipemodels/object_detector/efficientdet_lite0/int8/1/efficientdet_lite0.tflite
+# EfficientDet-Lite0 model (INT8 quantized, ~4MB, with built-in NMS post-processing)
+wget -O efficientdet_lite0.tflite https://storage.googleapis.com/download.tensorflow.org/models/tflite/task_library/object_detection/rpi/lite-model_efficientdet_lite0_detection_metadata_1.tflite
 ```
 
 Then install the TensorFlow Lite runtime and run:
 
 ```
-pip install tflite-runtime
+pip install ai-edge-litert
 python3 src/object-detection-tflite/object_detection_tflite.py
 ```
 
@@ -165,7 +165,7 @@ source venv/bin/activate
 The TensorFlow Lite example (§3.8) has an extra optional dependency — install it into the same venv only if you plan to use it:
 
 ```
-pip install tflite-runtime
+pip install ai-edge-litert
 ```
 
 ### 4.2. Run the scripts
