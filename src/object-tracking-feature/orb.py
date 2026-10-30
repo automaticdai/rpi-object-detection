@@ -21,7 +21,14 @@ import sys
 # Add src directory to the path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+from utils.picamera_utils import is_raspberry_camera, get_picamera
 from utils.camera_utils import open_camera
+
+IMAGE_WIDTH = 640
+IMAGE_HEIGHT = 480
+IS_RASPI_CAMERA = is_raspberry_camera()
+
+print("Using raspi camera: ", IS_RASPI_CAMERA)
 
 def ORB_detector(new_image, image_template):
     # Function that compares input image to template
@@ -73,7 +80,11 @@ if __name__ == "__main__":
     try:
         fps = 0
 
-        cap = open_camera(0, 640, 480)
+        if IS_RASPI_CAMERA:
+            cap = get_picamera(IMAGE_WIDTH, IMAGE_HEIGHT)
+            cap.start()
+        else:
+            cap = open_camera(0, IMAGE_WIDTH, IMAGE_HEIGHT)
 
         # Load our image template, this is our reference image
         image_template = cv2.imread('simple.png', 0)
@@ -82,7 +93,11 @@ if __name__ == "__main__":
         while True:
             # ----------------------------------------------------------------------
             # Get webcam images
-            ret, frame = cap.read()
+            if IS_RASPI_CAMERA:
+                # picamera2 returns 4-channel XRGB frames
+                frame = cv2.cvtColor(cap.capture_array(), cv2.COLOR_BGRA2BGR)
+            else:
+                ret, frame = cap.read()
 
             # Get height and width of webcam frame
             height, width = frame.shape[:2]
@@ -132,5 +147,5 @@ if __name__ == "__main__":
             if cv2.waitKey(1) == 13: #13 is the Enter Key
                 break
     finally:
-        cap.release()
+        cap.close() if IS_RASPI_CAMERA else cap.release()
         cv2.destroyAllWindows()
