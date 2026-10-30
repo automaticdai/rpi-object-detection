@@ -42,6 +42,14 @@ fi
 echo "Upgrading pip tooling..."
 ./venv/bin/pip install --upgrade pip setuptools wheel
 
+if is_raspberry_pi; then
+    # The default PyPI torch wheels for aarch64 pull in several GB of CUDA
+    # packages, which are useless on a Raspberry Pi. Install the CPU-only
+    # build first so that ultralytics reuses it.
+    echo "Installing CPU-only PyTorch ..."
+    ./venv/bin/pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+fi
+
 echo "Installing Python dependencies from requirements.txt ..."
 ./venv/bin/pip install -r requirements.txt
 
