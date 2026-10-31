@@ -183,9 +183,15 @@ Stream the Raspberry Pi camera as MJPEG over HTTP, so you can watch it from any 
 python3 src/camera-stream/cv_camera_stream.py
 ```
 
-Then open `http://<raspberry-pi-ip>:8000/` in a browser (the raw stream is at `/stream.mjpg`, which can also be opened in VLC). The resolution and port are set by `IMAGE_WIDTH`, `IMAGE_HEIGHT` and `PORT` at the top of the script. On a Compute Module 4 with a Camera Module v2 (IMX219), 1280 x 720 streams at about 30 FPS.
+Then open `http://<raspberry-pi-ip>:8000/` in a browser (the raw stream is at `/stream.mjpg`, which can also be opened in VLC). The script runs in the foreground by default. To keep it running in the background after you log out (like `nohup`), add `--nohup`:
 
-This example needs the Raspberry Pi camera and `Picamera2`; it does not support USB cameras. Press `Ctrl+C` to stop it. The stream has no authentication, so anyone on your network can view it. Only one program can use the camera at a time, so stop the stream before running the other examples.
+```
+python3 src/camera-stream/cv_camera_stream.py --nohup
+```
+
+It prints the process ID to stop it with (`kill <PID>`), and writes its output to `camera_stream.log` in the current directory. The resolution and port are set by `IMAGE_WIDTH`, `IMAGE_HEIGHT` and `PORT` at the top of the script. On a Compute Module 4 with a Camera Module v2 (IMX219), 1280 x 720 streams at about 30 FPS.
+
+This example needs the Raspberry Pi camera and `Picamera2`; it does not support USB cameras. In the foreground, press `Ctrl+C` to stop it. The stream has no authentication, so anyone on your network can view it. Only one program can use the camera at a time, so stop the stream before running the other examples.
 
 ## 4. How to Run
 ### 4.1. Install the environment

@@ -3,7 +3,9 @@
 # ------------------------------------------------------------------------------
 # Stream the Raspberry Pi camera as MJPEG over HTTP, so it can be viewed from
 # any browser on the network at http://<raspberry-pi-ip>:8000/
-# Requires the Raspberry Pi camera and Picamera2. Press Ctrl+C to stop.
+# Requires the Raspberry Pi camera and Picamera2. Runs in the foreground by
+# default (Ctrl+C to stop); use --nohup to keep it running in the background
+# after you log out.
 # ------------------------------------------------------------------------------
 # automaticdai
 # YF Robotics Laboratory
@@ -12,9 +14,13 @@
 # Website: https://yfrobotics.github.io/
 # ------------------------------------------------------------------------------
 
+import argparse
 import io
 import logging
+import os
 import socketserver
+import subprocess
+import sys
 from http import server
 from threading import Condition
 
@@ -25,6 +31,7 @@ from picamera2.outputs import FileOutput
 IMAGE_WIDTH = 1280
 IMAGE_HEIGHT = 720
 PORT = 8000
+LOG_FILE = "camera_stream.log"
 
 PAGE = b"""<html><head><title>Raspberry Pi camera</title></head>
 <body style="margin:0;background:#111;display:flex;justify-content:center;align-items:center;height:100vh">
@@ -79,7 +86,25 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     daemon_threads = True
 
 
+def run_nohup():
+    """Relaunch this script detached from the terminal, like `nohup`."""
+    with open(LOG_FILE, "ab") as log:
+        proc = subprocess.Popen([sys.executable, "-u", os.path.abspath(__file__)],
+                                stdin=subprocess.DEVNULL, stdout=log, stderr=log,
+                                start_new_session=True)
+    print(f"Streaming in the background on http://0.0.0.0:{PORT}/ (PID {proc.pid})")
+    print(f"Log: {os.path.abspath(LOG_FILE)}")
+    print(f"Stop with: kill {proc.pid}")
+
+
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Stream the Raspberry Pi camera as MJPEG over HTTP.")
+    parser.add_argument("--nohup", action="store_true",
+                        help="run in the background, surviving logout (output goes to " + LOG_FILE + ")")
+    if parser.parse_args().nohup:
+        run_nohup()
+        sys.exit(0)
+
     picam2 = Picamera2()
     picam2.configure(picam2.create_video_configuration(main={"size": (IMAGE_WIDTH, IMAGE_HEIGHT)}))
     output = StreamingOutput()
