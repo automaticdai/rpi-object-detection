@@ -13,14 +13,14 @@
     + [2.4. Tested platforms](#24-tested-platforms)
   * [3. What's in this repository](#3-what-s-in-this-repository)
     + [3.1. Camera Test](#31-camera-test)
-    + [3.2. Motion Detection](#32-motion-detection)
-    + [3.3. Color-based Object Detection and Tracking](#33-color-based-object-detection-and-tracking)
-    + [3.4. Shape-based Object Detection and Tracking](#34-shape-based-object-detection-and-tracking)
-    + [3.5. Feature-based Object Detection and Tracking (with ORB)](#35-feature-based-object-detection-and-tracking--with-orb-)
-    + [3.6. Face Detection and Tracking](#36-face-detection-and-tracking)
-    + [3.7. Object Detection using YOLO](#37-object-detection-using-yolo)
-    + [3.8. Object Detection using TensorFlow Lite](#38-object-detection-using-neural-network-tensorflow-lite)
-    + [3.9. Camera Streaming over HTTP](#39-camera-streaming-over-http)
+    + [3.2. Camera Streaming over HTTP](#32-camera-streaming-over-http)
+    + [3.3. Motion Detection](#33-motion-detection)
+    + [3.4. Color-based Object Detection and Tracking](#34-color-based-object-detection-and-tracking)
+    + [3.5. Shape-based Object Detection and Tracking](#35-shape-based-object-detection-and-tracking)
+    + [3.6. Feature-based Object Detection and Tracking (with ORB)](#36-feature-based-object-detection-and-tracking--with-orb-)
+    + [3.7. Face Detection and Tracking](#37-face-detection-and-tracking)
+    + [3.8. Object Detection using YOLO](#38-object-detection-using-yolo)
+    + [3.9. Object Detection using TensorFlow Lite](#39-object-detection-using-neural-network-tensorflow-lite)
   * [4. How to Run](#4-how-to-run)
     + [4.1. Install the environment](#41-install-the-environment)
     + [4.2. Run the scripts](#42-run-the-scripts)
@@ -107,6 +107,7 @@ The PlayStation Eye on the RPi 5 is limited to 30 FPS, so results at 30 FPS are 
 Currently, the following applications are implemented:
 
 - `src/camera-test`: Test if the camera is working
+- `src/camera-stream`: Stream the Raspberry Pi camera to a web browser (Raspberry Pi camera only)
 - `src/motion-detection`: Detect any motion in the frame
 - `src/object-tracking-color`: Object detection & tracking based on color
 - `src/object-tracking-shape`: Object detection & tracking based on shape
@@ -114,7 +115,6 @@ Currently, the following applications are implemented:
 - `src/face-detection`: Face detection & tracking
 - `src/object-detection-yolo`: Object detection using YOLO (RPi 3/4/5 only)
 - `src/object-detection-tflite`: Object detection using TensorFlow Lite (RPi 3/4/5 only)
-- `src/camera-stream`: Stream the Raspberry Pi camera to a web browser (Raspberry Pi camera only)
 
 
 ### 3.1. Camera Test
@@ -122,19 +122,36 @@ Test the RPi and OpenCV environment. You are expected to see a pop-up window tha
 
 ![alt text](./images/cv_camera_test.png)
 
-### 3.2. Motion Detection
+### 3.2. Camera Streaming over HTTP
+Stream the Raspberry Pi camera as MJPEG over HTTP, so you can watch it from any browser on the same network, without a display attached to the Pi. Frames are JPEG-encoded by the Pi's hardware encoder through `Picamera2`, so CPU usage stays low.
+
+```
+python3 src/camera-stream/cv_camera_stream.py
+```
+
+Then open `http://<raspberry-pi-ip>:8000/` in a browser (the raw stream is at `/stream.mjpg`, which can also be opened in VLC). The script runs in the foreground by default. To keep it running in the background after you log out (like `nohup`), add `--nohup`:
+
+```
+python3 src/camera-stream/cv_camera_stream.py --nohup
+```
+
+It prints the process ID to stop it with (`kill <PID>`), and writes its output to `camera_stream.log` in the current directory. The resolution and port are set by `IMAGE_WIDTH`, `IMAGE_HEIGHT` and `PORT` at the top of the script. On a Compute Module 4 with a Camera Module v2 (IMX219), 1280 x 720 streams at about 30 FPS.
+
+This example needs the Raspberry Pi camera and `Picamera2`; it does not support USB cameras. In the foreground, press `Ctrl+C` to stop it. The stream has no authentication, so anyone on your network can view it. Only one program can use the camera at a time, so stop the stream before running the other examples.
+
+### 3.3. Motion Detection
 Detect object movements in the camera frame and print a warning message when motion is sustained.
 
 Pipeline: the current and previous frames are converted to grayscale, Gaussian-blurred to suppress sensor noise, then compared with a per-pixel `cv2.absdiff`. The resulting diff is thresholded, dilated, and passed through `cv2.findContours`; only connected regions with area ≥ `MIN_MOTION_AREA` count as motion, and a debounce (`MOTION_CONSECUTIVE_FRAMES`) rejects one-frame transients. All thresholds are constants at the top of the script, so you can trade sensitivity for false-positive rate without touching the loop.
 
 ![alt text](./images/cv_motion_detection.png)
 
-### 3.3. Color-based Object Detection and Tracking
+### 3.4. Color-based Object Detection and Tracking
 Track an object based on its color in HSV and print its center position. You can choose your own color by clicking on the object of interest. Click multiple times on different points so a full color space is covered. You can hard code the parameters so you don't need to pick them again for the next run. The following demo shows how I track a Nintendo game controller in real-time:
 
 ![alt text](./images/cv_object_tracking_color.png)
 
-### 3.4. Shape-based Object Detection and Tracking
+### 3.5. Shape-based Object Detection and Tracking
 Detect and track geometric shapes in the frame:
 
 - **Circles** via `cv2.HoughCircles()`
@@ -144,21 +161,21 @@ Contours below `MIN_CONTOUR_AREA` pixels are filtered out to reduce noise; the e
 
 ![alt text](./images/cv_object_tracking_shape.png)
 
-### 3.5. Feature-based Object Detection and Tracking (with ORB)
+### 3.6. Feature-based Object Detection and Tracking (with ORB)
 Detect and track an object using its feature. The algorithm I selected here is ORB (Oriented FAST and Rotated BRIEF) for its fast calculation speed to enable real-time detection. To use the example, please prepare an Arduino UNO board in hand (or replace the `simple.png`).
 
 ![alt text](./images/cv_orb.png)
 
-### 3.6. Face Detection and Tracking
+### 3.7. Face Detection and Tracking
 Detecting face using Harr Cascade detector.
 
 ![cv_face-detection](images/cv_face-detection.png)
 
-### 3.7. Object Detection using YOLO
+### 3.8. Object Detection using YOLO
 Use YOLO (You Only Look Once) for object detection.  
 Note this code is based on Ultralytics YOLO. The instruction can be found at their website: [Quick Start Guide: Raspberry Pi with Ultralytics YOLO11](https://docs.ultralytics.com/guides/raspberry-pi/). Double check if you need to use it in a commercialised project! 
 
-### 3.8. Object Detection using Neural Network (TensorFlow Lite)
+### 3.9. Object Detection using Neural Network (TensorFlow Lite)
 Use TensorFlow Lite to recognise objects.
 
 To use it, download the model and labels into the module directory:
@@ -178,23 +195,6 @@ Then install the TensorFlow Lite runtime and run:
 pip install ai-edge-litert
 python3 src/object-detection-tflite/object_detection_tflite.py
 ```
-
-### 3.9. Camera Streaming over HTTP
-Stream the Raspberry Pi camera as MJPEG over HTTP, so you can watch it from any browser on the same network, without a display attached to the Pi. Frames are JPEG-encoded by the Pi's hardware encoder through `Picamera2`, so CPU usage stays low.
-
-```
-python3 src/camera-stream/cv_camera_stream.py
-```
-
-Then open `http://<raspberry-pi-ip>:8000/` in a browser (the raw stream is at `/stream.mjpg`, which can also be opened in VLC). The script runs in the foreground by default. To keep it running in the background after you log out (like `nohup`), add `--nohup`:
-
-```
-python3 src/camera-stream/cv_camera_stream.py --nohup
-```
-
-It prints the process ID to stop it with (`kill <PID>`), and writes its output to `camera_stream.log` in the current directory. The resolution and port are set by `IMAGE_WIDTH`, `IMAGE_HEIGHT` and `PORT` at the top of the script. On a Compute Module 4 with a Camera Module v2 (IMX219), 1280 x 720 streams at about 30 FPS.
-
-This example needs the Raspberry Pi camera and `Picamera2`; it does not support USB cameras. In the foreground, press `Ctrl+C` to stop it. The stream has no authentication, so anyone on your network can view it. Only one program can use the camera at a time, so stop the stream before running the other examples.
 
 ## 4. How to Run
 ### 4.1. Install the environment
@@ -216,7 +216,7 @@ Activate the environment in your shell before running any of the scripts:
 source venv/bin/activate
 ```
 
-The TensorFlow Lite example (§3.8) has an extra optional dependency — install it into the same venv only if you plan to use it:
+The TensorFlow Lite example (§3.9) has an extra optional dependency — install it into the same venv only if you plan to use it:
 
 ```
 pip install ai-edge-litert
@@ -275,7 +275,7 @@ Options:
 - `--duration 20` / `--warmup 5`: seconds measured per example, and seconds skipped after its first frame.
 - `--verbose`: show the output of each example.
 
-The TensorFlow Lite example is skipped if its model and labels have not been downloaded (see [3.8](#38-object-detection-using-neural-network-tensorflow-lite)). The camera test (§3.1) and camera streaming (§3.9) examples are not included, as they do no processing.
+The TensorFlow Lite example is skipped if its model and labels have not been downloaded (see [3.9](#39-object-detection-using-neural-network-tensorflow-lite)). The camera test (§3.1) and camera streaming (§3.2) examples are not included, as they do no processing.
 
 ## 5. Q&A
 **Q: Does this support Nvidia Jetson?**  
