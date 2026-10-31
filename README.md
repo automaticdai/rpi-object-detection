@@ -91,27 +91,33 @@ Measured with the benchmark script (`python3 benchmark/benchmark_fps.py --headle
 
 | Example | RPi 5 (CM5) | RPi 4 (CM4) |
 |---|---|---|
-| Motion Detection | 2312 FPS (0.4 ms) | 666 FPS (1.5 ms) |
-| Color-based Tracking | 1569 FPS (0.6 ms) | 436 FPS (2.3 ms) |
-| Shape-based Tracking | 514 FPS (1.9 ms) | 247 FPS (4.0 ms) |
-| Feature-based Tracking (ORB) | 55.3 FPS (18.1 ms) | 25.0 FPS (39.9 ms) |
-| Face Detection | 159 FPS (6.3 ms) | 84.4 FPS (11.8 ms) |
-| TensorFlow Lite (EfficientDet-Lite0) | 35.5 FPS (28.2 ms) | 12.4 FPS (80.9 ms) |
+| Motion Detection | 2312 FPS (0.4 ms) | 682 FPS (1.5 ms) |
+| Color-based Tracking | 1569 FPS (0.6 ms) | 443 FPS (2.3 ms) |
+| Shape-based Tracking | 514 FPS (1.9 ms) | 251 FPS (4.0 ms) |
+| Feature-based Tracking (ORB) | 55.3 FPS (18.1 ms) | 24.7 FPS (40.5 ms) |
+| Face Detection | 159 FPS (6.3 ms) | 79.0 FPS (12.7 ms) |
+| TensorFlow Lite (EfficientDet-Lite0) | 35.5 FPS (28.2 ms) | 12.2 FPS (82.0 ms) |
 | YOLO11n (Ultralytics, 640x480) | 2.1 FPS (466 ms) | 1.3 FPS (760 ms) |
 
 **Camera FPS** is the frame rate you see when running the examples on the live camera:
 
 | Example | RPi 5 (CM5) | RPi 4 (CM4) |
 |---|---|---|
-| Motion Detection | 30.0 FPS | 15.0 FPS |
-| Color-based Tracking | 29.1 FPS | 15.0 FPS |
-| Shape-based Tracking | 28.0 FPS | 15.0 FPS |
-| Feature-based Tracking (ORB) | 30.0 FPS | 15.0 FPS |
-| Face Detection | 26.6 FPS | 15.0 FPS |
-| TensorFlow Lite (EfficientDet-Lite0) | 30.0 FPS | 11.5 FPS |
+| Motion Detection | 30.0 FPS | 33.2 FPS |
+| Color-based Tracking | 29.1 FPS | 27.5 FPS |
+| Shape-based Tracking | 28.0 FPS | 26.4 FPS |
+| Feature-based Tracking (ORB) | 30.0 FPS | 22.6 FPS |
+| Face Detection | 26.6 FPS | 22.8 FPS |
+| TensorFlow Lite (EfficientDet-Lite0) | 30.0 FPS | 11.2 FPS |
 | YOLO11n (Ultralytics, 640x480) | 2.1 FPS | 0.8 FPS |
 
-Most camera FPS results are limited by the camera, not the CPU. The PlayStation Eye on the RPi 5 runs at up to 30 FPS. The Camera Module v2 on the RPi 4 ran at 15 FPS because the room was dim (about 16 lux): in low light the camera's auto exposure lengthens each frame (here to 66 ms), which lowers its frame rate. In good light, or with the frame duration fixed through `Picamera2`'s `FrameDurationLimits` control, it runs at 30 FPS. Only TensorFlow Lite on the RPi 4 and YOLO on both boards are limited by the CPU.
+Camera FPS is limited by different things:
+
+- **The camera**: the PlayStation Eye runs at up to 30 FPS, and the Camera Module v2 at about 33 FPS at 320 x 240. Motion detection reaches the camera's frame rate on both boards.
+- **The `cv2.waitKey()` delay**: color and shape tracking wait 33 ms per frame, which keeps them below 30 FPS. Face detection waits 30 ms per frame, which, with 12.7 ms of detection on the RPi 4, gives about 23 FPS.
+- **The CPU**: ORB and TensorFlow Lite on the RPi 4, and YOLO on both boards. For these, camera FPS is close to processing FPS.
+
+Camera FPS also depends on the lighting. In a dim room (about 16 lux), the Camera Module v2 lengthened its exposure to 66 ms per frame and ran at only 15 FPS, which capped all the fast examples at 15 FPS. The RPi 4 results above were measured with the room light on (about 240 lux).
 
 
 ## 3. What's in this repository
