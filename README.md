@@ -78,29 +78,40 @@ This project is dependent on the following packages:
   - If the camera fails to open (e.g. `Failed to create CaptureSession`), restart the camera daemon: `sudo systemctl restart nvargus-daemon`.
 
 ### 2.4. Tested platforms
-All eight examples have been tested on the following setups:
+All the examples have been tested on the following setups:
 
 | Board | OS | Python | Camera |
 |---|---|---|---|
 | Raspberry Pi Compute Module 5 (RPi 5) | Ubuntu 24.04 LTS | 3.12 | Sony PlayStation Eye (USB) |
 | Raspberry Pi Compute Module 4 (RPi 4) | Raspberry Pi OS (Debian 13 trixie) | 3.13 | Camera Module v2.1 (IMX219) on `CAM1` |
 
-Measured frame rates (OpenCV 5.0):
+Measured with the benchmark script (`python3 benchmark/benchmark_fps.py --headless`, 20 s per example after a 5 s warm-up, OpenCV 5.0). See [4.4. Benchmark the frame rate](#44-benchmark-the-frame-rate) to measure your own board.
+
+**Processing FPS** shows how fast each board runs the example's processing, without the camera's frame rate limit (time per frame in brackets):
 
 | Example | RPi 5 (CM5) | RPi 4 (CM4) |
 |---|---|---|
-| Camera Test | 30 FPS | 29 FPS |
-| Motion Detection | 30 FPS | 20 FPS |
-| Color-based Tracking | 29 FPS | 27 FPS |
-| Shape-based Tracking | 28 FPS | 23 FPS |
-| Feature-based Tracking (ORB) | 30 FPS | 20 FPS |
-| Face Detection | 25 FPS | 20 FPS |
-| TensorFlow Lite (EfficientDet-Lite0) | 30 FPS | 11 FPS |
-| YOLO11n (Ultralytics, 640x480) | 2.2 FPS | 0.9 FPS |
+| Motion Detection | 2312 FPS (0.4 ms) | 666 FPS (1.5 ms) |
+| Color-based Tracking | 1569 FPS (0.6 ms) | 436 FPS (2.3 ms) |
+| Shape-based Tracking | 514 FPS (1.9 ms) | 247 FPS (4.0 ms) |
+| Feature-based Tracking (ORB) | 55.3 FPS (18.1 ms) | 25.0 FPS (39.9 ms) |
+| Face Detection | 159 FPS (6.3 ms) | 84.4 FPS (11.8 ms) |
+| TensorFlow Lite (EfficientDet-Lite0) | 35.5 FPS (28.2 ms) | 12.4 FPS (80.9 ms) |
+| YOLO11n (Ultralytics, 640x480) | 2.1 FPS (466 ms) | 1.3 FPS (760 ms) |
 
-You can measure these on your own board with the benchmark script, see [4.4. Benchmark the frame rate](#44-benchmark-the-frame-rate).
+**Camera FPS** is the frame rate you see when running the examples on the live camera:
 
-The PlayStation Eye on the RPi 5 is limited to 30 FPS, so results at 30 FPS are capped by the camera rather than by the CPU.
+| Example | RPi 5 (CM5) | RPi 4 (CM4) |
+|---|---|---|
+| Motion Detection | 30.0 FPS | 15.0 FPS |
+| Color-based Tracking | 29.1 FPS | 15.0 FPS |
+| Shape-based Tracking | 28.0 FPS | 15.0 FPS |
+| Feature-based Tracking (ORB) | 30.0 FPS | 15.0 FPS |
+| Face Detection | 26.6 FPS | 15.0 FPS |
+| TensorFlow Lite (EfficientDet-Lite0) | 30.0 FPS | 11.5 FPS |
+| YOLO11n (Ultralytics, 640x480) | 2.1 FPS | 0.8 FPS |
+
+Most camera FPS results are limited by the camera, not the CPU. The PlayStation Eye on the RPi 5 runs at up to 30 FPS. The Camera Module v2 on the RPi 4 ran at 15 FPS because the room was dim (about 16 lux): in low light the camera's auto exposure lengthens each frame (here to 66 ms), which lowers its frame rate. In good light, or with the frame duration fixed through `Picamera2`'s `FrameDurationLimits` control, it runs at 30 FPS. Only TensorFlow Lite on the RPi 4 and YOLO on both boards are limited by the CPU.
 
 
 ## 3. What's in this repository
@@ -249,22 +260,10 @@ python3 benchmark/benchmark_fps.py
 
 Each example is measured in two ways:
 
-- **Camera FPS**: the example runs as normal on the live camera. This is the frame rate you see in practice (the numbers in [2.4. Tested platforms](#24-tested-platforms)), but it can never exceed the camera's frame rate (often 30 FPS), and several examples also wait 30 ms per frame in `cv2.waitKey()`.
+- **Camera FPS**: the example runs as normal on the live camera. This is the frame rate you see in practice, but it can never exceed the camera's frame rate (often 30 FPS), and several examples also wait 30 ms per frame in `cv2.waitKey()`.
 - **Processing FPS**: a short clip is recorded from the camera first, then fed to each example as fast as it can take frames, with no windows and no `waitKey()` delay. This shows how much processing headroom the board has, and the time per frame shows the cost of each algorithm. The examples' own code is not changed: the benchmark replaces the camera with the clip when it starts them.
 
-For example, on the RPi 5 (CM5) with a USB camera:
-
-| Example | Camera FPS | Processing FPS | Time per frame |
-|---|---|---|---|
-| Motion Detection | 30.0 FPS | 2274 FPS | 0.4 ms |
-| Color-based Tracking | 29.1 FPS | 1574 FPS | 0.6 ms |
-| Shape-based Tracking | 28.0 FPS | 538 FPS | 1.9 ms |
-| Feature-based Tracking (ORB) | 30.0 FPS | 56.6 FPS | 17.7 ms |
-| Face Detection | 26.6 FPS | 167 FPS | 6.0 ms |
-| TensorFlow Lite (EfficientDet-Lite0) | 30.0 FPS | 36.1 FPS | 27.7 ms |
-| YOLO11n (Ultralytics, 640x480) | 2.1 FPS | 2.2 FPS | 464 ms |
-
-All the examples except YOLO are limited by the camera rather than the CPU on this board. Processing FPS does not include drawing the windows, which also takes time when a display is attached.
+See [2.4. Tested platforms](#24-tested-platforms) for results on the RPi 5 and RPi 4. Processing FPS does not include drawing the windows, which also takes time when a display is attached. Camera FPS also depends on the lighting, as many cameras lower their frame rate in low light.
 
 Options:
 
