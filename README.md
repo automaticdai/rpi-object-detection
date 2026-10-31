@@ -25,6 +25,7 @@
     + [4.1. Install the environment](#41-install-the-environment)
     + [4.2. Run the scripts](#42-run-the-scripts)
     + [4.3. Change camera resolution](#43-change-camera-resolution)
+    + [4.4. Benchmark the frame rate](#44-benchmark-the-frame-rate)
   * [5. Q&A](#5-q-a)
   * [License](#license)
 
@@ -96,6 +97,8 @@ Measured frame rates (OpenCV 5.0):
 | Face Detection | 25 FPS | 20 FPS |
 | TensorFlow Lite (EfficientDet-Lite0) | 30 FPS | 11 FPS |
 | YOLO11n (Ultralytics, 640x480) | 2.2 FPS | 0.9 FPS |
+
+You can measure these on your own board with the benchmark script, see [4.4. Benchmark the frame rate](#44-benchmark-the-frame-rate).
 
 The PlayStation Eye on the RPi 5 is limited to 30 FPS, so results at 30 FPS are capped by the camera rather than by the CPU.
 
@@ -237,6 +240,21 @@ Changing the resolution will significantly impact the FPS. By default it is set 
 - 1280 x 720 (720p)
 - 1920 x 1080 (1080p: make sure your camera supports this high resolution.)
 
+### 4.4. Benchmark the frame rate
+`benchmark/benchmark_fps.py` runs each example for a fixed time and reports its average frame rate as a Markdown table, in the same format as [2.4. Tested platforms](#24-tested-platforms). It counts the frames each example prints, skips a warm-up period (model loading, camera start-up), and stops each example before starting the next one.
+
+```
+python3 benchmark/benchmark_fps.py
+```
+
+Options:
+
+- `--headless`: do not open any windows, so it can be run over SSH without a display. Frame timing is kept the same as with a display.
+- `--only camera-test yolo`: run only some of the examples (`camera-test`, `motion-detection`, `color`, `shape`, `orb`, `face`, `tflite`, `yolo`).
+- `--duration 20` / `--warmup 5`: seconds measured per example, and seconds skipped after its first frame.
+- `--verbose`: show the output of each example.
+
+The TensorFlow Lite example is skipped if its model and labels have not been downloaded (see [3.8](#38-object-detection-using-neural-network-tensorflow-lite)). The camera streaming example (§3.9) is not included, as it does not process frames itself.
 
 ## 5. Q&A
 **Q: Does this support Nvidia Jetson?**  
