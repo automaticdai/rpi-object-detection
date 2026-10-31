@@ -241,15 +241,37 @@ Changing the resolution will significantly impact the FPS. By default it is set 
 - 1920 x 1080 (1080p: make sure your camera supports this high resolution.)
 
 ### 4.4. Benchmark the frame rate
-`benchmark/benchmark_fps.py` runs each example for a fixed time and reports its average frame rate as a Markdown table, in the same format as [2.4. Tested platforms](#24-tested-platforms). It counts the frames each example prints, skips a warm-up period (model loading, camera start-up), and stops each example before starting the next one.
+`benchmark/benchmark_fps.py` runs each example for a fixed time and reports its average frame rate as a Markdown table. It counts the frames each example prints, skips a warm-up period (model loading, camera start-up), and stops each example before starting the next one.
 
 ```
 python3 benchmark/benchmark_fps.py
 ```
 
+Each example is measured in two ways:
+
+- **Camera FPS**: the example runs as normal on the live camera. This is the frame rate you see in practice (the numbers in [2.4. Tested platforms](#24-tested-platforms)), but it can never exceed the camera's frame rate (often 30 FPS), and several examples also wait 30 ms per frame in `cv2.waitKey()`.
+- **Processing FPS**: a short clip is recorded from the camera first, then fed to each example as fast as it can take frames, with no windows and no `waitKey()` delay. This shows how much processing headroom the board has, and the time per frame shows the cost of each algorithm. The examples' own code is not changed: the benchmark replaces the camera with the clip when it starts them.
+
+For example, on the RPi 5 (CM5) with a USB camera:
+
+| Example | Camera FPS | Processing FPS | Time per frame |
+|---|---|---|---|
+| Camera Test | 30.1 FPS | 11528 FPS | 0.1 ms |
+| Motion Detection | 30.0 FPS | 2274 FPS | 0.4 ms |
+| Color-based Tracking | 29.1 FPS | 1574 FPS | 0.6 ms |
+| Shape-based Tracking | 28.0 FPS | 538 FPS | 1.9 ms |
+| Feature-based Tracking (ORB) | 30.0 FPS | 56.6 FPS | 17.7 ms |
+| Face Detection | 26.6 FPS | 167 FPS | 6.0 ms |
+| TensorFlow Lite (EfficientDet-Lite0) | 30.0 FPS | 36.1 FPS | 27.7 ms |
+| YOLO11n (Ultralytics, 640x480) | 2.1 FPS | 2.2 FPS | 464 ms |
+
+All the examples except YOLO are limited by the camera rather than the CPU on this board. Processing FPS does not include drawing the windows, which also takes time when a display is attached.
+
 Options:
 
-- `--headless`: do not open any windows, so it can be run over SSH without a display. Frame timing is kept the same as with a display.
+- `--mode camera` / `--mode processing`: measure only one of the two (default: both).
+- `--video clip.mp4`: use the first frames of a video file for processing FPS instead of recording from the camera, so no camera is needed with `--mode processing`.
+- `--headless`: do not open any windows for camera FPS, so it can be run over SSH without a display. Frame timing is kept the same as with a display. (Processing FPS never opens windows.)
 - `--only camera-test yolo`: run only some of the examples (`camera-test`, `motion-detection`, `color`, `shape`, `orb`, `face`, `tflite`, `yolo`).
 - `--duration 20` / `--warmup 5`: seconds measured per example, and seconds skipped after its first frame.
 - `--verbose`: show the output of each example.
