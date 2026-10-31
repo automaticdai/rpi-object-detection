@@ -18,7 +18,7 @@
 #   python3 benchmark/benchmark_fps.py                  # all examples, both modes
 #   python3 benchmark/benchmark_fps.py --headless       # no display needed
 #   python3 benchmark/benchmark_fps.py --mode processing --video clip.mp4
-#   python3 benchmark/benchmark_fps.py --only camera-test yolo --duration 30
+#   python3 benchmark/benchmark_fps.py --only face yolo --duration 30
 # ------------------------------------------------------------------------------
 # automaticdai
 # YF Robotics Laboratory
@@ -48,8 +48,8 @@ FPS_LINE = re.compile(r'Estimated fps')
 YOLO_LINE = re.compile(r'^Speed: ')
 
 # (key, name, script relative to src/, per-frame line, files the example needs)
+# Camera test and camera streaming are not included, as they do no processing.
 EXAMPLES = [
-    ('camera-test', 'Camera Test', 'camera-test/cv_camera_test.py', FPS_LINE, []),
     ('motion-detection', 'Motion Detection', 'motion-detection/cv_motion_detection.py', FPS_LINE, []),
     ('color', 'Color-based Tracking', 'object-tracking-color/cv_object_tracking_color.py', FPS_LINE, []),
     ('shape', 'Shape-based Tracking', 'object-tracking-shape/cv_object_tracking_shape.py', FPS_LINE, []),

@@ -256,7 +256,6 @@ For example, on the RPi 5 (CM5) with a USB camera:
 
 | Example | Camera FPS | Processing FPS | Time per frame |
 |---|---|---|---|
-| Camera Test | 30.1 FPS | 11528 FPS | 0.1 ms |
 | Motion Detection | 30.0 FPS | 2274 FPS | 0.4 ms |
 | Color-based Tracking | 29.1 FPS | 1574 FPS | 0.6 ms |
 | Shape-based Tracking | 28.0 FPS | 538 FPS | 1.9 ms |
@@ -272,11 +271,11 @@ Options:
 - `--mode camera` / `--mode processing`: measure only one of the two (default: both).
 - `--video clip.mp4`: use the first frames of a video file for processing FPS instead of recording from the camera, so no camera is needed with `--mode processing`.
 - `--headless`: do not open any windows for camera FPS, so it can be run over SSH without a display. Frame timing is kept the same as with a display. (Processing FPS never opens windows.)
-- `--only camera-test yolo`: run only some of the examples (`camera-test`, `motion-detection`, `color`, `shape`, `orb`, `face`, `tflite`, `yolo`).
+- `--only face yolo`: run only some of the examples (`motion-detection`, `color`, `shape`, `orb`, `face`, `tflite`, `yolo`).
 - `--duration 20` / `--warmup 5`: seconds measured per example, and seconds skipped after its first frame.
 - `--verbose`: show the output of each example.
 
-The TensorFlow Lite example is skipped if its model and labels have not been downloaded (see [3.8](#38-object-detection-using-neural-network-tensorflow-lite)). The camera streaming example (§3.9) is not included, as it does not process frames itself.
+The TensorFlow Lite example is skipped if its model and labels have not been downloaded (see [3.8](#38-object-detection-using-neural-network-tensorflow-lite)). The camera test (§3.1) and camera streaming (§3.9) examples are not included, as they do no processing.
 
 ## 5. Q&A
 **Q: Does this support Nvidia Jetson?**  
