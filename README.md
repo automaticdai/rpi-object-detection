@@ -107,7 +107,7 @@ The PlayStation Eye on the RPi 5 is limited to 30 FPS, so results at 30 FPS are 
 Currently, the following applications are implemented:
 
 - `src/camera-test`: Test if the camera is working
-- `src/camera-stream`: Stream the Raspberry Pi camera to a web browser (Raspberry Pi camera only)
+- `src/camera-stream`: Stream the camera to a web browser
 - `src/motion-detection`: Detect any motion in the frame
 - `src/object-tracking-color`: Object detection & tracking based on color
 - `src/object-tracking-shape`: Object detection & tracking based on shape
@@ -123,7 +123,7 @@ Test the RPi and OpenCV environment. You are expected to see a pop-up window tha
 ![alt text](./images/cv_camera_test.png)
 
 ### 3.2. Camera Streaming over HTTP
-Stream the Raspberry Pi camera as MJPEG over HTTP, so you can watch it from any browser on the same network, without a display attached to the Pi. Frames are JPEG-encoded by the Pi's hardware encoder through `Picamera2`, so CPU usage stays low.
+Stream the camera as MJPEG over HTTP, so you can watch it from any browser on the same network, without a display attached to the Pi. With the Raspberry Pi camera, frames are JPEG-encoded by the Pi's hardware encoder through `Picamera2`, so CPU usage stays low. With a USB camera, frames are read and JPEG-encoded with OpenCV.
 
 ```
 python3 src/camera-stream/cv_camera_stream.py
@@ -135,9 +135,9 @@ Then open `http://<raspberry-pi-ip>:8000/` in a browser (the raw stream is at `/
 python3 src/camera-stream/cv_camera_stream.py --nohup
 ```
 
-It prints the process ID to stop it with (`kill <PID>`), and writes its output to `camera_stream.log` in the current directory. The resolution and port are set by `IMAGE_WIDTH`, `IMAGE_HEIGHT` and `PORT` at the top of the script. On a Compute Module 4 with a Camera Module v2 (IMX219), 1280 x 720 streams at about 30 FPS.
+It prints the process ID to stop it with (`kill <PID>`), and writes its output to `camera_stream.log` in the current directory. The resolution and port are set by `IMAGE_WIDTH`, `IMAGE_HEIGHT` and `PORT` at the top of the script. If a USB camera does not support the requested resolution, it uses the closest one it has, and the script prints the resolution it actually streams at. Tested at about 30 FPS with a Camera Module v2 (IMX219) on a Compute Module 4 at 1280 x 720, and with a PlayStation Eye USB camera on a Compute Module 5 at 640 x 480.
 
-This example needs the Raspberry Pi camera and `Picamera2`; it does not support USB cameras. In the foreground, press `Ctrl+C` to stop it. The stream has no authentication, so anyone on your network can view it. Only one program can use the camera at a time, so stop the stream before running the other examples.
+Like the other examples, the script uses the Raspberry Pi camera when `Picamera2` is installed and a camera is connected, and the USB camera otherwise. The Raspberry Pi camera does not need OpenCV. In the foreground, press `Ctrl+C` to stop it. The stream has no authentication, so anyone on your network can view it. Only one program can use the camera at a time, so stop the stream before running the other examples.
 
 ### 3.3. Motion Detection
 Detect object movements in the camera frame and print a warning message when motion is sustained.
