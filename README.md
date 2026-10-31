@@ -20,6 +20,7 @@
     + [3.6. Face Detection and Tracking](#36-face-detection-and-tracking)
     + [3.7. Object Detection using YOLO](#37-object-detection-using-yolo)
     + [3.8. Object Detection using TensorFlow Lite](#38-object-detection-using-neural-network-tensorflow-lite)
+    + [3.9. Camera Streaming over HTTP](#39-camera-streaming-over-http)
   * [4. How to Run](#4-how-to-run)
     + [4.1. Install the environment](#41-install-the-environment)
     + [4.2. Run the scripts](#42-run-the-scripts)
@@ -110,6 +111,7 @@ Currently, the following applications are implemented:
 - `src/face-detection`: Face detection & tracking
 - `src/object-detection-yolo`: Object detection using YOLO (RPi 3/4/5 only)
 - `src/object-detection-tflite`: Object detection using TensorFlow Lite (RPi 3/4/5 only)
+- `src/camera-stream`: Stream the Raspberry Pi camera to a web browser (Raspberry Pi camera only)
 
 
 ### 3.1. Camera Test
@@ -173,6 +175,17 @@ Then install the TensorFlow Lite runtime and run:
 pip install ai-edge-litert
 python3 src/object-detection-tflite/object_detection_tflite.py
 ```
+
+### 3.9. Camera Streaming over HTTP
+Stream the Raspberry Pi camera as MJPEG over HTTP, so you can watch it from any browser on the same network, without a display attached to the Pi. Frames are JPEG-encoded by the Pi's hardware encoder through `Picamera2`, so CPU usage stays low.
+
+```
+python3 src/camera-stream/cv_camera_stream.py
+```
+
+Then open `http://<raspberry-pi-ip>:8000/` in a browser (the raw stream is at `/stream.mjpg`, which can also be opened in VLC). The resolution and port are set by `IMAGE_WIDTH`, `IMAGE_HEIGHT` and `PORT` at the top of the script. On a Compute Module 4 with a Camera Module v2 (IMX219), 1280 x 720 streams at about 30 FPS.
+
+This example needs the Raspberry Pi camera and `Picamera2`; it does not support USB cameras. Press `Ctrl+C` to stop it. The stream has no authentication, so anyone on your network can view it. Only one program can use the camera at a time, so stop the stream before running the other examples.
 
 ## 4. How to Run
 ### 4.1. Install the environment
