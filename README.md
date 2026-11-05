@@ -55,13 +55,13 @@ This project is dependent on the following packages:
 
 ### 2.2. Hardware support
 - Support Raspberry Pi 1 Model B, Raspberry Pi 2, Raspberry Pi Zero, and Raspberry Pi 3/4/5 (preferable)
-  - Raspberry Pi 5 and Raspberry Pi 4 have been tested (on Compute Module 5 and Compute Module 4), see [2.4. Tested platforms](#24-tested-platforms).
+  - Raspberry Pi 5, Raspberry Pi 4 (on Compute Module 5 and Compute Module 4), Raspberry Pi 3 Model B and Raspberry Pi Zero 2 W have been tested, see [2.4. Tested platforms](#24-tested-platforms).
   - Both Raspberry Pi OS and Ubuntu are supported.
   - Different boards will have very varied performances.
   - RPi 3/4/5 are preferable as they have more powerful CPUs;
   - RPi 1/2 may be struggling and produce very low FPS, in which case you can further reduce the camera resolution (160 x 120).
 - Nvidia Jetson
-  - Jetson Nano (A01) also passed the test.
+  - Jetson Nano (A01) also passed the test, including YOLO on the GPU (see [2.4. Tested platforms](#24-tested-platforms)).
   - Jetson Orin Nano should work as well.
   - Jetson has its own repo now: [jetson-object-detection](https://github.com/automaticdai/jetson-object-detection)
 
@@ -84,22 +84,30 @@ All the examples have been tested on the following setups:
 |---|---|---|---|
 | Raspberry Pi Compute Module 5 (RPi 5) | Ubuntu 24.04 LTS | 3.12 | Sony PlayStation Eye (USB) |
 | Raspberry Pi Compute Module 4 (RPi 4) | Raspberry Pi OS (Debian 13 trixie) | 3.13 | Camera Module v2.1 (IMX219) on `CAM1` |
+| Raspberry Pi 3 Model B (RPi 3) | Raspberry Pi OS (Debian 13 trixie) | 3.13 | Camera Module v1 (OV5647) |
+| Raspberry Pi Zero 2 W | Raspberry Pi OS Lite (Debian 13 trixie) | 3.13 | Camera Module v2 (IMX219) |
+| Nvidia Jetson Nano 4GB | JetPack 4.6.1 (Ubuntu 18.04) | 3.8 (see below) | — (processing FPS only) |
 
-Measured with the benchmark script (`python3 benchmark/benchmark_fps.py --headless`, 20 s per example after a 5 s warm-up, OpenCV 5.0). See [4.4. Benchmark the frame rate](#44-benchmark-the-frame-rate) to measure your own board.
+Measured with the benchmark script (20 s per example after a 5 s warm-up, OpenCV 5.0). See [4.4. Benchmark the frame rate](#44-benchmark-the-frame-rate) to measure your own board.
 
-**Processing FPS** shows how fast each board runs the example's processing, without the camera's frame rate limit (time per frame in brackets):
+**Processing FPS** shows how fast each board runs the example's processing, without the camera's frame rate limit (time per frame in brackets). So that the boards can be compared directly, every board was fed the same 640 x 480 clip, recorded once with the PlayStation Eye (`python3 benchmark/benchmark_fps.py --mode processing --video clip.avi`):
 
-| Example | RPi 5 (CM5) | RPi 4 (CM4) |
-|---|---|---|
-| Motion Detection | 2312 FPS (0.4 ms) | 682 FPS (1.5 ms) |
-| Color-based Tracking | 1569 FPS (0.6 ms) | 443 FPS (2.3 ms) |
-| Shape-based Tracking | 514 FPS (1.9 ms) | 251 FPS (4.0 ms) |
-| Feature-based Tracking (ORB) | 55.3 FPS (18.1 ms) | 24.7 FPS (40.5 ms) |
-| Face Detection | 159 FPS (6.3 ms) | 79.0 FPS (12.7 ms) |
-| TensorFlow Lite (EfficientDet-Lite0) | 35.5 FPS (28.2 ms) | 12.2 FPS (82.0 ms) |
-| YOLO11n (Ultralytics, 640x480) | 2.1 FPS (466 ms) | 1.3 FPS (760 ms) |
+| Example | RPi 5 (CM5) | RPi 4 (CM4) | RPi 3 | RPi Zero 2 W | Jetson Nano |
+|---|---|---|---|---|---|
+| Motion Detection | 2318 FPS (0.4 ms) | 645 FPS (1.6 ms) | 362 FPS (2.8 ms) | 321 FPS (3.1 ms) | 697 FPS (1.4 ms) |
+| Color-based Tracking | 1573 FPS (0.6 ms) | 440 FPS (2.3 ms) | 251 FPS (4.0 ms) | 222 FPS (4.5 ms) | 467 FPS (2.1 ms) |
+| Shape-based Tracking | 577 FPS (1.7 ms) | 202 FPS (4.9 ms) | 119 FPS (8.4 ms) | 110 FPS (9.1 ms) | 295 FPS (3.4 ms) |
+| Feature-based Tracking (ORB) | 53.6 FPS (18.7 ms) | 24.3 FPS (41.2 ms) | 13.0 FPS (76.9 ms) | 11.1 FPS (90.4 ms) | 23.9 FPS (41.8 ms) |
+| Face Detection | 164 FPS (6.1 ms) | 79.1 FPS (12.6 ms) | 42.5 FPS (23.5 ms) | 36.9 FPS (27.1 ms) | 75.7 FPS (13.2 ms) |
+| TensorFlow Lite (EfficientDet-Lite0) | 33.2 FPS (30.2 ms) | 12.3 FPS (81.6 ms) | 6.1 FPS (165 ms) | 5.1 FPS (194 ms) | 8.6 FPS (116 ms) |
+| YOLO11n (Ultralytics, 640x480) | 2.1 FPS (475 ms) | 1.3 FPS (765 ms) | 0.6 FPS (1578 ms) | out of memory | **7.1 FPS (140 ms, GPU)** |
 
-**Camera FPS** is the frame rate you see when running the examples on the live camera:
+Notes on these results:
+
+- **RPi Zero 2 W and YOLO11n**: YOLO11n needs about 430 MB of RAM to process one 640 x 480 frame (peak, measured on the RPi 3), but the Zero 2 W has only 512 MB in total (about 290 MB free with no desktop running), so it runs out of memory. Use the TensorFlow Lite example on the Zero 2 W instead.
+- **Jetson Nano**: all the examples run on the CPU except YOLO11n, which runs on the GPU. JetPack 4.6 only has Python 3.6, which is too old for Ultralytics (3.8+) and `ai-edge-litert`, and NVIDIA's CUDA builds of PyTorch for JetPack 4 are for Python 3.6 only. These results use a Python 3.8 virtual environment (`python3.8`, part of Ubuntu 18.04) with the CUDA 10.2 builds of PyTorch 1.11 and torchvision 0.12 that Ultralytics publish for JetPack 4 (the ones in their [JetPack 4 Docker image](https://github.com/ultralytics/ultralytics/blob/main/docker/Dockerfile-jetson-jetpack4)), `tflite-runtime` 2.13 and `opencv-contrib-python` 5.0. As the pip OpenCV has no GStreamer, use JetPack's own OpenCV (Python 3.6) for a CSI camera (see [2.3. Camera support](#23-camera-support)).
+
+**Camera FPS** is the frame rate you see when running the examples on the live camera (`python3 benchmark/benchmark_fps.py --headless`, RPi 5 and RPi 4 only):
 
 | Example | RPi 5 (CM5) | RPi 4 (CM4) |
 |---|---|---|
@@ -269,7 +277,7 @@ Each example is measured in two ways:
 - **Camera FPS**: the example runs as normal on the live camera. This is the frame rate you see in practice, but it can never exceed the camera's frame rate (often 30 FPS), and several examples also wait 30 ms per frame in `cv2.waitKey()`.
 - **Processing FPS**: a short clip is recorded from the camera first, then fed to each example as fast as it can take frames, with no windows and no `waitKey()` delay. This shows how much processing headroom the board has, and the time per frame shows the cost of each algorithm. The examples' own code is not changed: the benchmark replaces the camera with the clip when it starts them.
 
-See [2.4. Tested platforms](#24-tested-platforms) for results on the RPi 5 and RPi 4. Processing FPS does not include drawing the windows, which also takes time when a display is attached. Camera FPS also depends on the lighting, as many cameras lower their frame rate in low light.
+See [2.4. Tested platforms](#24-tested-platforms) for results on the RPi 5, RPi 4, RPi 3, RPi Zero 2 W and Jetson Nano. Processing FPS does not include drawing the windows, which also takes time when a display is attached. Camera FPS also depends on the lighting, as many cameras lower their frame rate in low light.
 
 Options:
 
