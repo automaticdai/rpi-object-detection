@@ -189,7 +189,7 @@ def run_example(script, frame_line, duration, warmup, no_display, clip, verbose)
     # relative path (e.g. orb.py reads simple.png).
     proc = subprocess.Popen(cmd, cwd=os.path.dirname(script_path),
                             stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
-                            stderr=subprocess.STDOUT, text=True, errors='replace')
+                            stderr=subprocess.STDOUT, universal_newlines=True, errors='replace')
 
     timestamps = []
     tail = []
