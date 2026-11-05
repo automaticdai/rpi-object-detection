@@ -51,6 +51,7 @@ def visualize_fps(image, fps: int):
 
 
 if __name__ == "__main__":
+    cap = None
     try:
         # Load the cascade
         # JetPack's OpenCV has no cv2.data, and the OpenCV 5 pip wheels ship an
@@ -107,4 +108,5 @@ if __name__ == "__main__":
     finally:
         # Clean up and exit the program
         cv2.destroyAllWindows()
-        cap.close() if IS_RASPI_CAMERA else cap.release()
+        if cap is not None:
+            cap.close() if IS_RASPI_CAMERA else cap.release()
