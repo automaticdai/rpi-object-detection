@@ -261,12 +261,27 @@ Options:
 - `--duration 20` / `--warmup 5`: seconds measured per example, and seconds skipped after its first frame.
 - `--verbose`: show the output of each example.
 
+To draw the results as a chart, put them in `benchmark/results.csv` (one row per example, one column per board; a cell is the FPS, the FPS followed by `gpu` if it ran on the GPU, `oom` if it ran out of memory, or empty if not measured) and run:
+
+```
+python3 benchmark/plot_results.py
+```
+
+This saves a grouped bar chart to `images/benchmark_fps.png`, plus `images/benchmark_fps_dark.png` for dark backgrounds (`--theme light` or `--theme dark` for only one, `--csv` and `--out` for other files).
+
 The TensorFlow Lite example is skipped if its model and labels have not been downloaded (see [3.9](#39-object-detection-using-neural-network-tensorflow-lite)). The camera test (§3.1) and camera streaming (§3.2) examples are not included, as they do no processing.
 
 ### 5.2. Results
 Measured with the benchmark script (20 s per example after a 5 s warm-up, OpenCV 5.0). See [5.1. Run the benchmark](#51-run-the-benchmark) to measure your own board.
 
 **Processing FPS** shows how fast each board runs the example's processing, without the camera's frame rate limit (time per frame in brackets). So that the boards can be compared directly, every board was fed the same 640 x 480 clip, recorded once with the PlayStation Eye (`python3 benchmark/benchmark_fps.py --mode processing --video clip.avi`):
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="images/benchmark_fps_dark.png">
+  <img alt="Grouped bar chart of processing FPS for each example on the RPi 5 (CM5), RPi 4 (CM4), Jetson Nano, RPi 3 and RPi Zero 2 W, on a log scale. The RPi 5 is fastest on every example except YOLO11n, where the Jetson Nano's GPU reaches 7.1 FPS; YOLO11n runs out of memory on the Zero 2 W." src="images/benchmark_fps.png">
+</picture>
+
+The same results as a table:
 
 | Example | RPi 5 (CM5) | RPi 4 (CM4) | RPi 3 | RPi Zero 2 W | Jetson Nano |
 |---|---|---|---|---|---|
