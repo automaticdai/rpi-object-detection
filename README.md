@@ -62,10 +62,7 @@ This project is dependent on the following packages:
   - Different boards will have very varied performances.
   - RPi 3/4/5 are preferable as they have more powerful CPUs;
   - RPi 1/2 may be struggling and produce very low FPS, in which case you can further reduce the camera resolution (160 x 120).
-- Nvidia Jetson
-  - Jetson Nano (A01) also passed the test, including YOLO on the GPU (see [5.2. Results](#52-results)).
-  - Jetson Orin Nano should work as well.
-  - Jetson has its own repo now: [jetson-object-detection](https://github.com/automaticdai/jetson-object-detection)
+- Nvidia Jetson is supported on a best-effort basis: the examples run on a Jetson Nano (see [5.2. Results](#52-results)), but this project is built for the Raspberry Pi. For Jetson-specific features (TensorRT, GPU detection, CSI camera setup), use [nvidia-jetson-object-detection](https://github.com/automaticdai/nvidia-jetson-object-detection).
 
 ### 2.3. Camera support
 - Any USB camera supported by Raspberry Pi
@@ -74,10 +71,7 @@ This project is dependent on the following packages:
   - All scripts use `Picamera2` automatically when it is installed (`sudo apt install python3-picamera2` on Raspberry Pi OS), and fall back to a USB camera otherwise.
   - On a Compute Module, the camera has to be declared in `/boot/firmware/config.txt`. For example, for a Camera Module v2 (IMX219) on the `CAM1` connector, set `camera_auto_detect=0` and add `dtoverlay=imx219,cam1`, then reboot. Use `ov5647` for Camera Module v1, `imx708` for v3, and `imx477` for the HQ camera. Run `rpicam-hello --list-cameras` to check that the camera is detected.
   - On Ubuntu, `python3-picamera2` is not available from the Ubuntu archive, so use a USB camera.
-- CSI cameras on Nvidia Jetson (e.g. Raspberry Pi Camera Module v2 / IMX219 on Jetson Nano) are supported through GStreamer.
-  - On Jetson, CSI cameras output raw Bayer frames through V4L2, so OpenCV cannot read them with a plain `cv2.VideoCapture(0)`. The scripts detect a Jetson CSI camera automatically and open it with an `nvarguscamerasrc` GStreamer pipeline instead (see `src/utils/camera_utils.py`). USB cameras on Jetson still use V4L2.
-  - This needs the OpenCV that ships with JetPack, which is built with GStreamer. Do **not** `pip install opencv-python` on Jetson: the pip wheels have no GStreamer support and will shadow JetPack's OpenCV.
-  - If the camera fails to open (e.g. `Failed to create CaptureSession`), restart the camera daemon: `sudo systemctl restart nvargus-daemon`.
+- CSI cameras on Nvidia Jetson are opened automatically through GStreamer. This needs JetPack's own OpenCV, not `pip install opencv-python`; see [nvidia-jetson-object-detection](https://github.com/automaticdai/nvidia-jetson-object-detection) for setup.
 
 ### 2.4. Tested platforms
 All the examples have been tested on the following setups:
@@ -296,7 +290,7 @@ The same results as a table:
 Notes on these results:
 
 - **RPi Zero 2 W and YOLO11n**: YOLO11n needs about 430 MB of RAM to process one 640 x 480 frame (peak, measured on the RPi 3), but the Zero 2 W has only 512 MB in total (about 290 MB free with no desktop running), so it runs out of memory. Use the TensorFlow Lite example on the Zero 2 W instead.
-- **Jetson Nano**: all the examples run on the CPU except YOLO11n, which runs on the GPU. JetPack 4.6 only has Python 3.6, which is too old for Ultralytics (3.8+) and `ai-edge-litert`, and NVIDIA's CUDA builds of PyTorch for JetPack 4 are for Python 3.6 only. These results use a Python 3.8 virtual environment (`python3.8`, part of Ubuntu 18.04) with the CUDA 10.2 builds of PyTorch 1.11 and torchvision 0.12 that Ultralytics publish for JetPack 4 (the ones in their [JetPack 4 Docker image](https://github.com/ultralytics/ultralytics/blob/main/docker/Dockerfile-jetson-jetpack4)), `tflite-runtime` 2.13 and `opencv-contrib-python` 5.0. As the pip OpenCV has no GStreamer, use JetPack's own OpenCV (Python 3.6) for a CSI camera (see [2.3. Camera support](#23-camera-support)).
+- **Jetson Nano** (for comparison): all the examples run on the CPU except YOLO11n, which runs on the GPU. Measured with Python 3.8 and the Ultralytics PyTorch builds for JetPack 4. For a faster TensorRT setup, see [nvidia-jetson-object-detection](https://github.com/automaticdai/nvidia-jetson-object-detection).
 
 **Camera FPS** is the frame rate you see when running the examples on the live camera (`python3 benchmark/benchmark_fps.py --headless`, RPi 5 and RPi 4 only):
 
@@ -321,7 +315,7 @@ Camera FPS also depends on the lighting. In a dim room (about 16 lux), the Camer
 
 ## 6. Q&A
 **Q: Does this support Nvidia Jetson?**  
-A: Yes. I have tested with my Jetson Nano 4GB. Note that Jetson has its own repo now: [jetson-object-detection](https://github.com/automaticdai/jetson-object-detection).
+A: Yes. I have tested with my Jetson Nano 4GB. Note that Jetson has its own repo now: [nvidia-jetson-object-detection](https://github.com/automaticdai/nvidia-jetson-object-detection).
 
 **Q: Does this support the Raspberry Pi camera?**  
 A: This is implemented in [issue [#16]](https://github.com/automaticdai/rpi-object-detection/pull/16).
