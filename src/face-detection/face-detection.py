@@ -54,6 +54,13 @@ if __name__ == "__main__":
     cap = None
     try:
         # Load the cascade
+        # In OpenCV 5, CascadeClassifier is only in the contrib build. It goes
+        # missing if opencv-python (pulled in by ultralytics) was installed
+        # after opencv-contrib-python, as both install into the same cv2/.
+        if not hasattr(cv2, 'CascadeClassifier'):
+            sys.exit("Error: this OpenCV has no CascadeClassifier. Reinstall the contrib build:\n"
+                     "    pip uninstall -y opencv-python\n"
+                     "    pip install --force-reinstall --no-deps opencv-contrib-python")
         # JetPack's OpenCV has no cv2.data, and the OpenCV 5 pip wheels ship an
         # empty one, so fall back to the system cascade directory
         cascade_name = 'haarcascade_frontalface_default.xml'

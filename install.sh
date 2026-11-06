@@ -53,6 +53,17 @@ fi
 echo "Installing Python dependencies from requirements.txt ..."
 ./venv/bin/pip install -r requirements.txt
 
+# Ultralytics depends on opencv-python, which installs into the same cv2/
+# folder as opencv-contrib-python. Whichever is installed last wins, and with
+# OpenCV 5 only the contrib build has CascadeClassifier (face detection).
+# Remove opencv-python and reinstall the contrib build so that it owns cv2/.
+# ("pip check" will then report that ultralytics requires opencv-python; this
+# is expected, as ultralytics only imports cv2.)
+echo "Making sure cv2 comes from opencv-contrib-python ..."
+./venv/bin/pip uninstall -y opencv-python
+OPENCV_VERSION=$(./venv/bin/pip show opencv-contrib-python | sed -n 's/^Version: //p')
+./venv/bin/pip install --force-reinstall --no-deps "opencv-contrib-python==${OPENCV_VERSION}"
+
 echo ""
 echo "Installation complete."
 echo ""

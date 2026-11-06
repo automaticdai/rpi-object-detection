@@ -200,6 +200,13 @@ On Raspberry Pi, the venv is created with `--system-site-packages` so that `libc
 
 The face detection example uses the Haar cascade files from the `libopencv-dev` system package (installed by `install.sh`), since the OpenCV 5 pip wheels no longer ship them.
 
+The examples need `opencv-contrib-python`: in OpenCV 5, face detection's `CascadeClassifier` is only in the contrib build. Ultralytics depends on `opencv-python`, which installs into the same `cv2` folder, so whichever of the two is installed last wins. `install.sh` therefore removes `opencv-python` and reinstalls `opencv-contrib-python` at the end (`pip check` then reports that ultralytics requires `opencv-python`; this is expected and harmless). If you later upgrade ultralytics, or install the packages yourself, and face detection reports that OpenCV has no `CascadeClassifier`, run:
+
+```
+pip uninstall -y opencv-python
+pip install --force-reinstall --no-deps opencv-contrib-python
+```
+
 Activate the environment in your shell before running any of the scripts:
 
 ```
